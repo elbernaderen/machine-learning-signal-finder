@@ -4,12 +4,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import time
 
-
-file =  pd.read_csv("XRPUSDT_15m.csv")
-t = file.drop(columns= "time")
-
-
-def verify(file):
+def verify(file,nam = "LINKUSDT"):
+    
+    t = file.drop(columns= "time")
     n = p = l = 0
     k = pd.DataFrame(columns =[ "open_1","high_1","low_1","close_1","mart_1","mart_inv_1",
                                 "open_2","high_2","low_2","close_2","mart_2","mart_inv_2",
@@ -20,7 +17,7 @@ def verify(file):
                                 "date","buy"])
     for i in range(9,len(file.index)):
         si_no = 1
-        if ((file["close"][i] - file["close"][i-4]) / file["close"][i-4]) > 0.01 or ((file["close"][i-1] - file["close"][i-4]) / file["close"][i-4]) > 0.01 or  ((file["close"][i-2] - file["close"][i-4]) / file["close"][i-4]) > 0.02 or((file["close"][i] - file["close"][i-4]) / file["close"][i-4]) > 0.02:
+        if ((file["close"][i] - file["close"][i-4]) / file["close"][i-4]) > 0.01 or ((file["close"][i-1] - file["close"][i-4]) / file["close"][i-4]) > 0.01 or  ((file["close"][i-2] - file["close"][i-4]) / file["close"][i-4]) > 0.02 or((file["close"][i-3] - file["close"][i-4]) / file["close"][i-4]) > 0.02 or ((file["high"][i] - file["close"][i-4]) / file["close"][i-4]) > 0.02:
             si_no ="comprar"
             n +=1
         else:
@@ -40,8 +37,9 @@ def verify(file):
                 i+=6       
     print(n,p)     
     return k
-
-v = verify(file)
+NAM = "LINKUSDT"
+file =  pd.read_csv("LINKUSDT_15m.csv")
+v = verify(file,nam = NAM)
 y = v.buy
 shib_features = [ "open_1","high_1","low_1","close_1","mart_1","mart_inv_1",
                 "open_2","high_2","low_2","close_2","mart_2","mart_inv_2",

@@ -5,7 +5,8 @@ from amplitudes_7_sv import pred
 from bina import store_ohlcv
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.ensemble import RandomForestClassifier
-#print(datetime.datetime())
+
+
 def make_prediction(file):
 
     new = pd.DataFrame(columns = [  "open_1","high_1","low_1","close_1","mart_1","mart_inv_1",
@@ -24,17 +25,17 @@ def make_prediction(file):
                     file["open"][i-5] / file["close"][i-6], file["high"][i-5] / file["close"][i-6], file["low"][i-5] / file["close"][i-6], file["close"][i-5] / file["close"][i-6],(file["open"][i-5] - file["close"][i-5]) / file["low"][i-5],(file["close"][i-5] - file["open"][i-5]) / file["high"][i-5],
                     file["date"][i], file["close"][i]]
     return new
-
+nam = "LINKUSDT"
 predictions = pred()
 while True:
     hour = datetime.timedelta(hours = 5)
     day = datetime.datetime.utcnow()
     tt = day-hour
     time.sleep(20)
-    kk = store_ohlcv(start_date = tt,name = "_prueba")
-    file =  pd.read_csv("XRPUSDT_15m_prueba.csv")  
+    kk = store_ohlcv(start_date = tt, name = "_prueba")
+    file =  pd.read_csv("LINKUSDT_15m_prueba.csv")  
     new = make_prediction(file)
     response = predictions.predict(new.drop(columns = ["date","close"]))
-    #predictions = rfc.predict(new.drop(columns = ["date","close"]))
+
     print(response,new["date"]," ",new["close"])
-    time.sleep(430)
+    time.sleep(150)
