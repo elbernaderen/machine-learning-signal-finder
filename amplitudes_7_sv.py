@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 import time
+import pickle
+
 
 def verify(file,nam = "LINKUSDT"):
     
@@ -56,6 +58,8 @@ rfc.fit(X_train,y_train)
 predictions = rfc.predict(X_test)
 print(confusion_matrix(y_test,predictions))
 
+filename = 'finalized_model.sav'
+pickle.dump(rfc, open(filename, 'wb'))
 print(classification_report(y_test,predictions))
 def pred(pred=rfc):
     rfc = pred
