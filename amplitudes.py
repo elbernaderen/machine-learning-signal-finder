@@ -1,6 +1,6 @@
-
 import sys
 import pandas as pd
+from tools import name_col
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
@@ -8,25 +8,16 @@ import time
 import pickle
 import datetime
 
+# B is the rise percent of the candles next to the close of the last candle
+#  that we use to decide if this sequence anticipate a rise
 B = sys.argv[0]
 
-def name_col(p,in_):
-    ind_row = p - in_ + 1
-    index_ = list()
-    for cin in range(ind_row):
-        index_.append(f"open_{cin}")
-        index_.append(f"high_{cin}")
-        index_.append(f"low_{cin}")
-        index_.append(f"close_{cin}")
-        index_.append(f"mart_{cin}")
-        index_.append(f"mart_inv_{cin}")
-        index_.append(f"ampl_1{cin}")
-        index_.append(f"ampl_2{cin}")
-    return index_
+#number of rows,or how many candles we are goingo to analize is p minus in_ 
 p = 15
+# in_ is the number of candles we consider to know if the price rises or fall
 in_ = 2
 def verify(file,nam):
-    
+
     index_ = name_col(p,in_)
     index_.append("date")
     index_.append("buy")
