@@ -8,7 +8,8 @@ import time
 import pickle
 import datetime
 
-B=0.05
+B = sys.argv[0]
+
 def name_col(p,in_):
     ind_row = p - in_ + 1
     index_ = list()
