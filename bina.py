@@ -1,3 +1,4 @@
+import sys
 from binance import Client
 import pandas as pd
 import yaml
@@ -9,7 +10,8 @@ config = yaml.load(open('config.yml'), Loader=yaml.FullLoader)
 # create client
 client = Client(config['api_key'], config['api_secret'])
 
-def store_ohlcv(symbol="XRPUSDT", interval='15m', start_date=datetime.datetime(2018,8,18), name=""):
+
+def store_ohlcv(symbol = "LINKUSDT", interval='1h', start_date=datetime.datetime(2018,8,18), name=""):
     # import ohlcv from binance starting from date 'start_date', that has to be in a string format of the timestamp in ms
     start_str = str(1000*start_date.timestamp())
     klines = client.get_historical_klines_generator(symbol, interval, start_str)
@@ -21,4 +23,6 @@ def store_ohlcv(symbol="XRPUSDT", interval='15m', start_date=datetime.datetime(2
     df = df.drop('ignore', axis=1).iloc[:-1]
     # store data as a pkl file
     df.to_csv(f"{symbol}_{interval}{name}.csv")
+    print(symbol)
+
 
