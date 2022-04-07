@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from tools import name_col
+from tools import name_col,RSI
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
@@ -15,6 +15,7 @@ B = float(sys.argv[1])
 
 #number of rows,or how many candles we are goingo to analize is p minus in_ 
 p = 15
+periods = 15
 # in_ is the number of candles we consider to know if the price rises or fall
 in_ = 2
 def verify(file,nam):
@@ -23,13 +24,14 @@ def verify(file,nam):
     index_.append("date")
     index_.append("buy")
     t = file.drop(columns= "time")
+    print(t.head())
     
     k = pd.DataFrame(columns = index_)
     for i in range(p,len(file.index)):
         
         si_no = 1
         
-        if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B :
+        if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B:
             si_no = f"{B}"
         else:
             si_no = "0"
@@ -47,7 +49,8 @@ def verify(file,nam):
             row.append(file["date"][i-in_])
             row.append(si_no)
             k.loc[len(k.index)] = row
-    #i+=5
+    
+    k.to_excel("prueba.xlsx", sheet_name='NUMBERS')
     return k
 
 names=["LISTA:"]
@@ -55,7 +58,9 @@ count = 0
 for nam in range(2,len(sys.argv)):
     print(str(sys.argv[nam]))
     file =  pd.read_csv(f"{str(sys.argv[nam])}_1d_basehs.csv")
-
+    rsi = RSI(file["close"],periods)
+    file["rsi"] = rsi
+    file = file.iloc[90: -1, :]
     if count == 0:
         v = verify(file,nam = str(sys.argv[nam]))
         count +=1

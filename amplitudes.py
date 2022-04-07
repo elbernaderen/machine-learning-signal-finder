@@ -10,7 +10,8 @@ import datetime
 
 # B is the rise percent of the candles next to the close of the last candle
 #  that we use to decide if this sequence anticipate a rise
-B = sys.argv[0]
+B = float(sys.argv[1])
+
 
 #number of rows,or how many candles we are goingo to analize is p minus in_ 
 p = 15
@@ -51,7 +52,7 @@ def verify(file,nam):
 
 names=["LISTA:"]
 count = 0
-for nam in range(1,len(sys.argv)):
+for nam in range(2,len(sys.argv)):
     print(str(sys.argv[nam]))
     file =  pd.read_csv(f"{str(sys.argv[nam])}_1d_basehs.csv")
 
