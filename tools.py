@@ -1,14 +1,15 @@
 import numpy as np
 import pandas as pd
-from sklearn.neighbors import radius_neighbors_graph
+#from sklearn.neighbors import radius_neighbors_graph
+
 def name_col(p,in_):
     ind_row = p - in_ + 1
     index_ = list()
     for cin in range(ind_row):
-        index_.append(f"open_{cin}")
-        index_.append(f"high_{cin}")
-        index_.append(f"low_{cin}")
-        index_.append(f"close_{cin}")
+        #index_.append(f"open_{cin}")
+      #  index_.append(f"high_{cin}")
+        #index_.append(f"low_{cin}")
+        #index_.append(f"close_{cin}")
         index_.append(f"volume_{cin}")
         index_.append(f"mart_{cin}")
         index_.append(f"mart_inv_{cin}")

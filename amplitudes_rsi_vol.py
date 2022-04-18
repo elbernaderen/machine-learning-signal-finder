@@ -14,29 +14,34 @@ B = float(sys.argv[1])
 
 
 #number of rows,or how many candles we are goingo to analize is p minus in_ 
-p = 11
-periods = 8
+p = 16
+periods = 9
 # in_ is the number of candles we consider to know if the price rises or fall
-in_ = 5
+in_ = 7
 def verify(file,nam):
     index_ = name_col(p,in_)
     index_.append("date")
     index_.append("buy")
     k = pd.DataFrame(columns = index_)
     for i in range(p,len(file.index)):
+        vol = 0
+        for t in range(in_ ,p+1):
+            vol += file["volume"][i-t]
+        vol_prom = vol/p
         si_no = 1
-        if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-3] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-4] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-5] - file["close"][i-in_]) / file["close"][i-in_]) > B:
-            si_no = f"{B}"
-        else:
-            si_no = "0"
+        if (file["volume"][i-in_-2] and file["volume"][i-in_-1] and file["volume"][i-in_]) > vol_prom * 2:
+            if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-3] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-4] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-5] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-6] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-7] - file["close"][i-in_]) / file["close"][i-in_]) > B:
+                si_no = f"{B}"
+            else:
+                si_no = "0"
         if si_no != 1:
             row = list()
             for t in range(in_ ,p+1):
-               # row.append(file["open"][i-t]/ file["close"][i-p])
-                #row.append(file["high"][i-t]/ file["close"][i-p])
+                #row.append(file["open"][i-t]/ file["close"][i-p])
+               # row.append(file["high"][i-t]/ file["close"][i-p])
                # row.append(file["low"][i-t]/ file["close"][i-p])
                # row.append(file["close"][i-t]/ file["close"][i-p])
-                #row.append(file["volume"][i-t] / float(file["volume"][i-p]))
+                row.append(file["volume"][i-t] / float(file["volume"][i-p]))
                 row.append((file["open"][i-t] - file["close"][i-t]) / file["low"][i-t])
                 row.append((file["close"][i-t] - file["open"][i-t]) / file["high"][i-t])
                 row.append((file["high"][i-t]) / (file["low"][i-t]))
@@ -48,9 +53,7 @@ def verify(file,nam):
             row.append(si_no)
             k.loc[len(k.index)] = row
             i+=in_
-    print(len(k))
     k = k.dropna()
-    print(len(k))
     return k
 
 names=["LISTA:"]
@@ -88,7 +91,7 @@ st = st.replace(" ","_")
 st = st.replace(":","_")
 filename = f'model_{names[1]}_{B}_{st[0:15]}.sav'
 pickle.dump(rfc, open(filename, 'wb'))
-print(f'model_{nam}_{B}_{st[0:15]}.sav' )
+print(f'model_{nam}_{B}_{st[0:16]}.sav' )
 print(names)
 print(classification_report(y_test,predictions))
 print(f"periods rsi: {periods}")
