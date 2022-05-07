@@ -77,3 +77,12 @@ def macd(file):
     df['macd_h'] = df.index.map(macd_h)
     df['macd_s'] = df.index.map(macd_s)
     return df
+
+def name_col_2(in_):
+    ind_row = in_
+    index_ = list()
+    for cin in range(ind_row):
+        index_.append(f"salida_{cin}")
+    for cin in range(ind_row):
+        index_.append(f"salidam_{cin}")
+    return index_

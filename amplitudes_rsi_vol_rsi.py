@@ -7,6 +7,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 import time
 import pickle
 import datetime
+import numpy as np
+from scipy.stats import linregress
 
 # B is the rise percent of the candles next to the close of the last candle
 #  that we use to decide if this sequence anticipate a rise
@@ -15,33 +17,31 @@ B = float(sys.argv[1])
 
 #number of rows,or how many candles we are goingo to analize is p minus in_ 
 p = 15
-periods = 30
+periods = 14
+a=4
+rsi_=30
 # in_ is the number of candles we consider to know if the price rises or fall
-in_ = 7
+in_ = 6
 def verify(file,nam):
     index_ = name_col(p,in_)
     index_.append("date")
     index_.append("buy")
     k = pd.DataFrame(columns = index_)
+    X = [x for x in range(0,p-in_)]
     for i in range(p,len(file.index)):
-        vol = 0
-        for t in range(in_ ,p+1):
-            vol += file["volume"][i-t]
-        vol_prom = vol/p
+        Y = [file["close"][t] for t in range(i-p,i-in_)]
+        slope,intercept, r_value, p_value_2, std_err = linregress(X, Y)
+        vol = [file["volume"][i-x] for x in range(in_ ,p+1)]
+        vol_prom = np.mean(vol)
         si_no = 1
-
-        if (file["volume"][i-in_-2] and file["volume"][i-in_-1] and file["volume"][i-in_]) > vol_prom * 2:
-            if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-3] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-4] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-5] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-6] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-7] - file["close"][i-in_]) / file["close"][i-in_]) > B:
+        if slope < 0 and file["rsi"][i-in_] < rsi_:
+            if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-3] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-4] - file["close"][i-in_]) / file["close"][i-in_]) > B:
                 si_no = f"{B}"
             else:
                 si_no = "0"
         if si_no != 1:
             row = list()
             for t in range(in_ ,p+1):
-                #row.append(file["open"][i-t]/ file["close"][i-p])
-               # row.append(file["high"][i-t]/ file["close"][i-p])
-               # row.append(file["low"][i-t]/ file["close"][i-p])
-               # row.append(file["close"][i-t]/ file["close"][i-p])
                 row.append(file["volume"][i-t] / float(file["volume"][i-p]))
                 row.append((file["open"][i-t] - file["close"][i-t]) / file["low"][i-t])
                 row.append((file["close"][i-t] - file["open"][i-t]) / file["high"][i-t])
@@ -54,7 +54,7 @@ def verify(file,nam):
             row.append(si_no)
             k.loc[len(k.index)] = row
             i+=in_
-    k = k.dropna()
+        k = k.dropna()
     return k
 
 names=["LISTA:"]
@@ -90,7 +90,7 @@ predictions = rfc.predict(X_test)
 st = str(datetime.datetime.now())
 st = st.replace(" ","_")
 st = st.replace(":","_")
-filename = f'model_{names[1]}_{B}_{st[0:15]}.sav'
+filename = f'model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav'
 pickle.dump(rfc, open(filename, 'wb'))
 print(f'model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav' )
 print(names)
