@@ -18,7 +18,7 @@ user_id = '1883463708'
 
 bot = telegram.Bot(token=api_key)
 
-p = 9
+p = 11
 in_ = 2
 rows = 7
 periods = 14
