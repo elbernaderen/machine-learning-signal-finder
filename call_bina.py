@@ -11,5 +11,5 @@ if len(sys.argv) > 0:
     dia = int(sys.argv[5])
 print(dia)
 start_date=datetime.datetime(año,mes,dia)     
-kk=store_ohlcv(symbol = nam,interval='1d', start_date=start_date,name=name)
+kk=store_ohlcv(symbol = nam,interval='30m', start_date=start_date,name=name)
 print(nam)
