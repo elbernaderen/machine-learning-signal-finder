@@ -83,7 +83,7 @@ shib_features =  name_col(p,in_)
 X =  v[shib_features]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=10)
-rfc = RandomForestClassifier(n_estimators=1000)
+rfc = RandomForestClassifier(n_estimators=2000)
 rfc.fit(X_train,y_train)
 predictions = rfc.predict(X_test)
 st = str(datetime.datetime.now())
