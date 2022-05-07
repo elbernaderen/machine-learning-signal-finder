@@ -5,7 +5,7 @@ import yaml
 import datetime
 
 # import config
-config = yaml.load(open('config.yml'), Loader=yaml.FullLoader)
+config = yaml.load(open('ignore/config.yml'), Loader=yaml.FullLoader)
 
 # create client
 client = Client(config['api_key'], config['api_secret'])

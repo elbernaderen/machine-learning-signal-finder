@@ -12,9 +12,12 @@ import telegram
 from tools import RSI,name_col,macd
 import numpy as np
 from scipy.stats import linregress
+import yaml
 
-api_key = '5187902884:AAHN_f_MFNHLwX_50X7Gu2LPJDOrlZPCkoY'
-user_id = '1883463708'
+config = yaml.load(open('ignore/telconfig.yml'), Loader=yaml.FullLoader)
+
+api_key = config['api_key']
+user_id = config['user_id']
 
 bot = telegram.Bot(token=api_key)
 
@@ -51,6 +54,7 @@ filename_1 = f'{exc_1}.sav'
 rfc_1 = pickle.load(open(filename_1, 'rb'))
 X = [x for x in range(0,p-in_)]
 while True:
+
     hour = datetime.timedelta(hours = 100)
     hour_ = datetime.datetime.utcnow()
     tt = hour_- hour
