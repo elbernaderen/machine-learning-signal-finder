@@ -12,7 +12,11 @@ import numpy as np
 from scipy.stats import linregress 
 p = 15
 periods = 14
+<<<<<<< HEAD
 #a=2
+=======
+a=2
+>>>>>>> d49fae0c608cf41b1495c7add2e885d6cbff2626
 rsi_=30
 # in_ is the number of candles we consider to know if the price rises or fall
 in_ = 6
@@ -31,8 +35,12 @@ def actual(file):
         vale = 0
         vol = [file["volume"][i-x] for x in range(in_ ,p+1)]
         vol_prom = np.mean(vol)
+<<<<<<< HEAD
         #(file["volume"][i-in_-1]> vol_prom * a or file["volume"][i-in_]> vol_prom * a) and 
         if slope < -.001 and file["rsi"][i-in_] < rsi_:
+=======
+        if (file["volume"][i-in_-1]> vol_prom * a or file["volume"][i-in_]> vol_prom * a) and slope < -.005 and file["rsi"][i-in_] < rsi_:
+>>>>>>> d49fae0c608cf41b1495c7add2e885d6cbff2626
             vale = 1
         for t in range(in_ ,p+1):
             #row.append(file["open"][i-t] / file["close"][i-p])

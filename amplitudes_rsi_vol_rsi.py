@@ -18,6 +18,10 @@ B = float(sys.argv[1])
 #number of rows,or how many candles we are goingo to analize is p minus in_ 
 p = 15
 periods = 14
+<<<<<<< HEAD
+=======
+a=4
+>>>>>>> d49fae0c608cf41b1495c7add2e885d6cbff2626
 rsi_=30
 # in_ is the number of candles we consider to know if the price rises or fall
 in_ = 6
@@ -33,7 +37,11 @@ def verify(file,nam):
         vol = [file["volume"][i-x] for x in range(in_ ,p+1)]
         vol_prom = np.mean(vol)
         si_no = 1
+<<<<<<< HEAD
         if slope < -0.001 and file["rsi"][i-in_] < rsi_:
+=======
+        if slope < 0 and file["rsi"][i-in_] < rsi_:
+>>>>>>> d49fae0c608cf41b1495c7add2e885d6cbff2626
             if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-3] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-4] - file["close"][i-in_]) / file["close"][i-in_]) > B:
                 si_no = f"{B}"
             else:
@@ -83,7 +91,11 @@ shib_features =  name_col(p,in_)
 X =  v[shib_features]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=10)
+<<<<<<< HEAD
 rfc = RandomForestClassifier(n_estimators=2000)
+=======
+rfc = RandomForestClassifier(n_estimators=1000)
+>>>>>>> d49fae0c608cf41b1495c7add2e885d6cbff2626
 rfc.fit(X_train,y_train)
 predictions = rfc.predict(X_test)
 st = str(datetime.datetime.now())
