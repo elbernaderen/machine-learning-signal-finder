@@ -10,26 +10,26 @@ import pickle
 import numpy as np
 from scipy.stats import linregress
 
-periods = 14
-p = 11
-in_ = 4
-b = 1
-a=3
-rsi_=30
+in_ = int(input("Enter the number of candels (Y) considered in the model for the prediction: \n"))
+rows =int(input("Enter the number of candels (X) considered in the model for the prediction:: \n"))
+periods = int(input("Enter the amount of periods for rsi calculation (14 recomended): \n"))
+a = int(input("Enter how much to increase the mean volume value: \n"))
+rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
+interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+p = rows + in_
 def actual(file):
-    X = [x for x in range(0,p-in_)]
+    X = [x for x in range(0,rows)]
     index_ = name_col_2(in_)
     index_.extend(["date","close","rsi","VOLUME","macd_h","vale"])
     new = pd.DataFrame(columns = index_)
-    for i in range(p,len(file)):
-        Y = list()
-        for t in range(i-p,i-in_):
-            Y.append(file["close"][t])
+    for i in range(rows + in_,len(file)):
+        Y = [file["close"][t] for t in range(i-p,i-in_)]
         slope,intercept, r_value, p_value_2, std_err = linregress(X, Y)
         row = list()
         vale = 0
-        vol = [file["volume"][i-x] for x in range(in_ ,p+1)]
-        vol_max =  max(vol)
+        vol = [file["volume"][i-x] for x in range(in_ ,rows + in_ + 1)]
         vol_prom = np.mean(vol)
         for t in reversed(range(in_)):
             row.append((file["high"][i-t] - file["close"][i-in_]) / file["close"][i-in_])
@@ -40,8 +40,7 @@ def actual(file):
         row.append(file["rsi"][i-in_])
         row.append(file["volume"][i-in_])
         row.append(file["macd_h"][i-in_])
-
-        if slope < 0 and (file["volume"][i-in_] > vol_prom * a or file["volume"][i-in_-1] > vol_prom * a) and (file["rsi"][i-in_] < rsi_ or file["rsi"][i-in_- 1] < rsi_ or file["rsi"][i-in_-2] < rsi_):
+        if slope < slope_ and (file["volume"][i-in_] > vol_prom * a or file["volume"][i-in_-1] > vol_prom * a) and (file["rsi"][i-in_] < rsi_ or file["rsi"][i-in_- 1] < rsi_ or file["rsi"][i-in_-2] < rsi_):
             vale = 1
         row.append(vale)
         new.loc[i] = row
@@ -65,4 +64,4 @@ df_down = df_actual[index_]
 
 st = str(datetime.datetime.now())
 
-df_down.to_excel(f"{name}_{a}_{b}_{rsi_}.xlsx", sheet_name='NUMBERS')
+df_down.to_excel(f"{name}_{a}_{rsi_}.xlsx", sheet_name='NUMBERS')

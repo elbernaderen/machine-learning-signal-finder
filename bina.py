@@ -8,7 +8,11 @@ import datetime
 config = yaml.load(open('ignore/config.yml'), Loader=yaml.FullLoader)
 
 # create client
-client = Client(config['api_key'], config['api_secret'])
+try:
+    client = Client(config['api_key'], config['api_secret'])
+except ConnectionError:
+    print("check your internet connection\n")
+    client = Client(config['api_key'], config['api_secret'])
 
 
 def store_ohlcv(symbol = "LINKUSDT", interval='1h', start_date=datetime.datetime(2018,8,18), name=""):
@@ -21,8 +25,7 @@ def store_ohlcv(symbol = "LINKUSDT", interval='1h', start_date=datetime.datetime
     df.loc[:,'date'] = pd.to_datetime(df.time, unit='ms')
     # remove the useless column and the last row as it is the current candle, therefore is not completed
     df = df.drop('ignore', axis=1).iloc[:-1]
-    # store data as a pkl file
+    # store data as a csv file
     df.to_csv(f"{symbol}_{interval}{name}.csv")
-    print(symbol)
 
 

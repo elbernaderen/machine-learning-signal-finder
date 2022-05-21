@@ -21,13 +21,29 @@ user_id = config['user_id']
 
 bot = telegram.Bot(token=api_key)
 
-p = 9
-in_ = 2
-rows = 7
-periods = 14
-a=4
-rsi_=30
+in_ = int(input("Enter the number of candels (Y) considered in the model for the prediction: \n"))
+rows =int(input("Enter the number of candels (X) considered in the model for the prediction:: \n"))
+periods = int(input("Enter the amount of periods for rsi calculation (14 recomended): \n"))
+a = int(input("Enter how much to increase the mean volume value: \n"))
+rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
+interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+
+p = in_ + rows
+
+if "d" in interval:
+    inter_ = 3600*24
+    hours = 24 * 150
+elif "h" in interval:
+    inter_ = 3600
+    hours = 150
+else:
+    interval_ = 60 * int(interval.replace("m",""))
+    hours = 150
+
 def make_prediction(file):
+    # this function generates a row with the candels choosen, so the predictor can make the prediction
     index_ = name_col(p,in_)
     index_.append("date")
     index_.append("close")
@@ -35,9 +51,13 @@ def make_prediction(file):
     i = len(file)-1
     row = list()
     for t in range(rows+1):
+        # volume relation normalized with the first element of the row
         row.append(file["volume"][i-t] / float(file["volume"][i-rows]))
+        # value amplitude relation 1
         row.append((file["open"][i-t] - file["close"][i-rows]) / file["low"][i-rows])
+        # value amplitude relation 2
         row.append((file["close"][i-t] - file["open"][i-rows]) / file["high"][i-rows])
+        # value amplitude relation 3
         row.append((file["high"][i-t]) / (file["low"][i-rows]))
         row.append(file["rsi"][i-t])
         row.append(file["macd"][i-t])
@@ -47,27 +67,29 @@ def make_prediction(file):
     new.loc[1] = row
     return new
 
-nam = str(sys.argv[1])
-exc_1 = str(sys.argv[2])
+exc_1 = str(sys.argv[1])
 
 filename_1 = f'{exc_1}.sav'
 rfc_1 = pickle.load(open(filename_1, 'rb'))
-X = [x for x in range(0,p-in_)]
+#Generate a list to analize the slope with linear regression from cero to rows
+X = [x for x in range(0,rows)]
 while True:
-
-    hour = datetime.timedelta(hours = 100)
+    inter_ = interval_
+    hour = datetime.timedelta(hours = hours)
     hour_ = datetime.datetime.utcnow()
-    tt = hour_- hour
-    print(tt)
+    tt = hour_ - hour
     try:
-        kk = store_ohlcv(symbol = nam,interval='30m',start_date = tt,name="_mensajero")
+        kk = store_ohlcv(symbol = nam, interval = interval, start_date = tt, name="_mensajero")
     except ConnectionError:
         time.sleep(60)
-        kk = store_ohlcv(symbol = nam,interval='30m',start_date = tt,name="_mensajero")
+        inter_-=60
+        print("check your internet connection\n")
+        kk = store_ohlcv(symbol = nam, interval = interval, start_date = tt, name="_mensajero")
+    # wait to download the csv file
     time.sleep(30)
-    file =  pd.read_csv(f"{nam}_30m_mensajero.csv")
-    
+    inter_-=30
 
+    file =  pd.read_csv(f"{nam}_{interval}_mensajero.csv")
     rsi = RSI(file["close"],periods)
     file["rsi"] = rsi
     file = macd(file)
@@ -77,25 +99,25 @@ while True:
     file = file.reset_index()
     rsi = RSI(file["close"],periods)
     file["rsi"] = rsi
-    Y = list()
-    for t in range(len(file)-rows,len(file)):
-        Y.append(file["close"][t])
+    #Generate a list to analize the slope with linear regression whit the close values
+    Y = [file["close"][t] for t in range(len(file)-rows,len(file))]
     slope,intercept, r_value, p_value_2, std_err = linregress(X, Y)
-    vol = 0
-    for t in range(len(file)-rows,len(file)):
-        
-        Y.append(file["close"][t])
-    vol_prom = vol/(p+in_)
+    # generate a list with every volume value of the rows
+    vol = [file["volume"][x] for x in range(len(file)-rows,len(file))]
+    # calculate the mean value of the volume list
+    vol_prom = np.mean(vol)
     new = make_prediction(file)
     response_1 = rfc_1.predict(new.drop(columns = ["date","close"]))  
 
     print(response_1,new["date"]," ",new["close"])
     coef_1 = float(response_1)
-    print(coef_1)
     if coef_1 > 0 and slope < -0.01 and (file["volume"][len(file)-1]> vol_prom * a or file["volume"][len(file)-2]> vol_prom * a) and file["rsi"][len(file)-1] < rsi_:
         coef = coef_1
         t= f'{nam} \n BUY: {float(new["close"])} \n TAKEPROFIT: {float(new["close"])*(1+coef)} \n STOPLOSS: {float(new["close"])*(1-.005)} \n cero: {float(new["close"])*(1+0.0015)} \n {datetime.datetime.now()} '
         print(t)
         bot.send_message(chat_id=user_id, text=t)
-    time.sleep(1770)
+    else:
+        t= f"{nam}  \n don't buy, wait {interval}"
+        print(t)
+    time.sleep(inter_)
         

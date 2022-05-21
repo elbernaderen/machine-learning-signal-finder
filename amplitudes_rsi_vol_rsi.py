@@ -12,55 +12,63 @@ from scipy.stats import linregress
 
 # B is the rise percent of the candles next to the close of the last candle
 #  that we use to decide if this sequence anticipate a rise
-B = float(sys.argv[1])
 
-
-#number of rows,or how many candles we are goingo to analize is p minus in_ 
-p = 15
-periods = 14
-rsi_=30
+B = float(input("Enter the percentage that have to rise the price to consider it as a success: \n"))
 # in_ is the number of candles we consider to know if the price rises or fall
-in_ = 6
-def verify(file,nam):
+in_ = int(input("Enter the number of candels (Y) to consider in the model for the prediction: \n"))
+rows =int(input("Enter the number of candels (X) consider in the model for the prediction: \n"))
+periods = int(input("Enter the amount of periods for rsi calculation (14 recomended): \n"))
+rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+p = rows + in_
+a = int(input("Enter how much to increase the mean volume value: \n"))
+slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+temp = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+def verify(file):
+    # create the index of the df
     index_ = name_col(p,in_)
     index_.append("date")
     index_.append("buy")
     k = pd.DataFrame(columns = index_)
+    #Generate a list to analize the slope with linear regression from cero to rows
     X = [x for x in range(0,p-in_)]
     for i in range(p,len(file.index)):
         Y = [file["close"][t] for t in range(i-p,i-in_)]
+        rsi_list = [file["rsi"][t] for t in range(i-p,i-in_)]
         slope,intercept, r_value, p_value_2, std_err = linregress(X, Y)
         vol = [file["volume"][i-x] for x in range(in_ ,p+1)]
         vol_prom = np.mean(vol)
         si_no = 1
-        if slope < -0.001 and file["rsi"][i-in_] < rsi_:
-            if ((file["high"][i] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-1] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-2] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-3] - file["close"][i-in_]) / file["close"][i-in_]) > B or ((file["high"][i-4] - file["close"][i-in_]) / file["close"][i-in_]) > B:
+        #if the values in the row pass the filter, they are considered to make the predictor model
+        if slope < slope_ and (file["volume"][i-in_] or file["volume"][i-in_-1]) > vol_prom * a and min(rsi_list) < rsi_:
+            # hi is the list with variaton of the candles we consider to know if the price rises or fall
+            hi = [(file["high"][i-t] - file["close"][i-in_]) / file["close"][i-in_] for t in range(in_ + 1)]
+            if max(hi) > B:
                 si_no = f"{B}"
             else:
                 si_no = "0"
+        # eithercero or B, if the row was considered, is will be added to the df to then execute the predictor
         if si_no != 1:
             row = list()
             for t in range(in_ ,p+1):
-                row.append(file["volume"][i-t] / float(file["volume"][i-p]))
-                row.append((file["open"][i-t] - file["close"][i-t]) / file["low"][i-t])
-                row.append((file["close"][i-t] - file["open"][i-t]) / file["high"][i-t])
-                row.append((file["high"][i-t]) / (file["low"][i-t]))
-                row.append(file["rsi"][i-t])
-                row.append(file["macd"][i-t])
-                row.append(file["macd_h"][i-t])
-                row.append(file["macd_s"][i-t])
-            row.append(file["date"][i-in_])
-            row.append(si_no)
+                row = row +[file["volume"][i-t] / float(file["volume"][i-p]),
+                (file["open"][i-t] - file["close"][i-t]) / file["low"][i-t],
+                (file["close"][i-t] - file["open"][i-t]) / file["high"][i-t],
+                (file["high"][i-t]) / (file["low"][i-t]),
+                file["rsi"][i-t],
+                file["macd"][i-t],
+                file["macd_h"][i-t],
+                file["macd_s"][i-t]] 
+            row = row + [file["date"][i-in_],si_no] 
             k.loc[len(k.index)] = row
-            i+=in_
         k = k.dropna()
     return k
 
 names=["LISTA:"]
 count = 0
-temp = str(sys.argv[2])
-for nam in range(3,len(sys.argv)):
+
+for nam in range(1,len(sys.argv)):
     file =  pd.read_csv(f"{str(sys.argv[nam])}_{temp}_basehs.csv")
+    
     rsi = RSI(file["close"],periods)
     file["rsi"] = rsi
     file = macd(file)
@@ -70,20 +78,20 @@ for nam in range(3,len(sys.argv)):
     file = file.reset_index()
 
     if count == 0:
-        v = verify(file,nam = str(sys.argv[nam]))
+        v = verify(file)
         count +=1
     else:
-        k = verify(file,nam = str(sys.argv[nam]))
+        k = verify(file)
+
         v = pd.concat([v,k],ignore_index=True)
+
     names.append(str(sys.argv[nam]))
 y = v.buy
-
-shib_features =  name_col(p,in_)
-       
-X =  v[shib_features]
-
+#columns to use to run the rfc
+features =  name_col(p,in_)
+X =  v[features]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=10)
-rfc = RandomForestClassifier(n_estimators=3000)
+rfc = RandomForestClassifier(n_estimators=2000)
 rfc.fit(X_train,y_train)
 predictions = rfc.predict(X_test)
 st = str(datetime.datetime.now())
@@ -97,6 +105,5 @@ print(classification_report(y_test,predictions))
 print(f"periods rsi: {periods}")
 print(f"in_: {in_}")
 print(f"p: {p}")
-loaded_model = pickle.load(open(filename, 'rb'))
-comprobacion = loaded_model.predict(X_test)
+print(f"rows: {rows}")
 
