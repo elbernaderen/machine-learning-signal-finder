@@ -6,8 +6,14 @@ Once we have ran over all the historical assets we determined and generated the 
 Then, with the model we can predict if the prices will rise and send a signal with the telegram bot, and so we'll know if have to buy or not an asset determined.
 Before we create the rows, first we filter them taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, and just if the candel sequence fit the requirements the row mentionated is created and considered for the predictor.
 
-## Usage
+## Must install
 
+## Usage
+pandas 
+sklearn 
+pickle 
+numpy 
+scipy 
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
