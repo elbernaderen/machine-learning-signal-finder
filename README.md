@@ -32,16 +32,19 @@ The increment before mentionated has to be between the Y candels
 ```bash
 Enter the number of candels (X) consider in the model for the prediction:
 ```
-These will be the candels we are
+These will be the candels we use to predict
 ```bash
 Enter the amount of periods for rsi calculation (14 recomended):
 ```
+A period for rsi calculation can be better for a candle interval analysis, and not for other one, so, it can be modificated if want it
 ```bash
 Enter the rsi value to consider (30 recomended):
 ```
+The RSI value is a indicator for some strategies in crypto-trading, so it also can be modificated as a superior limit (the script can be easily changeable)
 ```bash
 Enter how much to increase the mean volume value:
 ```
+This is a filter to consider just the candles with a bigger volume than the mean volume of a determined amount of candles
 ```bash
 Enter the slope to take in reference, (0 recomended):
 ```
