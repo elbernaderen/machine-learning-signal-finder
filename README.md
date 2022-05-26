@@ -15,6 +15,42 @@ Before we create the rows, first we filter them taking in count the slope of the
 
 
 ## Usage
+Once we have downloaded the historical assets (one or more) with the same interval in the same directory of the program, we call the program with the historical assets as command line arguments in capital as:
+
+```bash
+py amplitudes_rsi_vol_rsi.py BTCUSDT ETHUSDT ADAUSDT
+```
+Then, the program will ask the next variables:
+```bash
+Enter the percentage that have to rise the price to consider it as a success:
+```
+This is the increment that we look for predict
+```bash
+Enter the number of candels (Y) to consider in the model for the prediction:
+```
+The increment before mentionated has to be between the Y candels
+```bash
+Enter the number of candels (X) consider in the model for the prediction:
+```
+These will be the candels we are
+```bash
+Enter the amount of periods for rsi calculation (14 recomended):
+```
+```bash
+Enter the rsi value to consider (30 recomended):
+```
+```bash
+Enter how much to increase the mean volume value:
+```
+```bash
+Enter the slope to take in reference, (0 recomended):
+```
+```bash
+Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
+```
+```bash
+Enter how many candels consider to calculate the volume mean:
+```
 
 # mensajero_d.py
 ## Introduction:
