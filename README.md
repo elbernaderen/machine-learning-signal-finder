@@ -56,7 +56,8 @@ The interval of the historical assets to consider.
 ```bash
 Enter how many candels consider to calculate the volume mean:
 ```
-To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants.
+To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants, ex: 300.
+Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
 
 # mensajero_d.py
 ## Introduction:
