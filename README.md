@@ -24,7 +24,7 @@ Then, the program will ask the next variables:
 ```bash
 Enter the percentage that have to rise the price to consider it as a success:
 ```
-This is the increment that we look for predict
+This is the increment that we look for predict, ex: 0.01
 ```bash
 Enter the number of candels (Y) to consider in the model for the prediction:
 ```
@@ -48,12 +48,15 @@ This is a filter to consider just the candles with a bigger volume than the mean
 ```bash
 Enter the slope to take in reference, (0 recomended):
 ```
+The slope of the close value of the candels indicates if the market (in this sequence) is bullish or bearish.
 ```bash
 Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
 ```
+The interval of the historical assets to consider.
 ```bash
 Enter how many candels consider to calculate the volume mean:
 ```
+To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants.
 
 # mensajero_d.py
 ## Introduction:
