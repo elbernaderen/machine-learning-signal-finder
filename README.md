@@ -58,7 +58,8 @@ Enter how many candels consider to calculate the volume mean:
 ```
 To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants, ex: 300.
 Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
-
+# backtest_strategy.py
+This program, as it's name says is a backtest for a strategy with a determinated historical asset.
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
