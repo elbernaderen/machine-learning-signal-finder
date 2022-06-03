@@ -61,7 +61,8 @@ Once the program have finished, a classification report will be printed in conso
 # backtest_strategy.py
 This program, as it's name says is a backtest for a strategy with a determinated historical asset.
 ## Description
-With a historical asset, that has been download with **call_bina.py**, this program creates an .xlsx spreadsheet where is the data and the results of a determinated strategy.
+With a historical asset, that has been download with **call_bina.py**, this program creates an .xlsx spreadsheet where is the data and the decision of the stratrategy, buy or don't do nothing.
+Taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, if the strategy set fits with the sequence, the column "vale" will be the value of the increment predicted. In all the other cases the value will be 0. Further, a determined number of candles that come next to the sequence analyzed will be added, with the highest and lowest values, so we can know if the strategy is acerted, and with this information we can improve it.
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
