@@ -60,6 +60,8 @@ To calculate the mean volume,so it can know if the volume has a increment or in 
 Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
 # backtest_strategy.py
 This program, as it's name says is a backtest for a strategy with a determinated historical asset.
+## Description
+With a historical asset, that has been download with **call_bina.py**, this program creates an .xlsx spreadsheet where is the data and the results of a determinated strategy.
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
