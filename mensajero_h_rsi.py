@@ -49,8 +49,7 @@ while True:
         kk = store_ohlcv(symbol = nam, interval = interval, start_date = tt, name="_mensajero")
     # wait to download the csv file
     time.sleep(30)
-    inter_-=30
-    
+    inter_-=30 
     file =  pd.read_csv(f"{nam}_{interval}_mensajero.csv")
     Y = [file["close"][t] for t in range(len(file)-rows,len(file))]
     slope,intercept, r_value, p_value_2, std_err = linregress(X, Y)
