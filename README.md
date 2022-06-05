@@ -24,7 +24,7 @@ Then, the program will ask the next variables:
 ```bash
 Enter the percentage that have to rise the price to consider it as a success:
 ```
-This is the increment that we look for predict
+This is the increment that we look for predict, ex: 0.01
 ```bash
 Enter the number of candels (Y) to consider in the model for the prediction:
 ```
@@ -48,13 +48,21 @@ This is a filter to consider just the candles with a bigger volume than the mean
 ```bash
 Enter the slope to take in reference, (0 recomended):
 ```
+The slope of the close value of the candels indicates if the market (in this sequence) is bullish or bearish.
 ```bash
 Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
 ```
+The interval of the historical assets to consider.
 ```bash
 Enter how many candels consider to calculate the volume mean:
 ```
-
+To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants, ex: 300.
+Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
+# backtest_strategy.py
+This program, as it's name says is a backtest for a strategy with a determinated historical asset.
+## Description
+With a historical asset, that has been download with **call_bina.py**, this program creates an .xlsx spreadsheet where is the data and the decision of the stratrategy, buy or don't do nothing.
+Taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, if the strategy set fits with the sequence, the column "vale" will be the value of the increment predicted. In all the other cases the value will be 0. Further, a determined number of candles that come next to the sequence analyzed will be added, with the highest and lowest values, so we can know if the strategy is acerted, and with this information we can improve it.
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
