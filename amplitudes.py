@@ -4,7 +4,6 @@ from tools import name_col,RSI,macd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-import time
 import pickle
 import datetime
 import numpy as np
@@ -21,9 +20,10 @@ periods = int(input("Enter the amount of periods for rsi calculation (14 recomen
 rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
 p = rows + in_
 a = int(input("Enter how much to increase the mean volume value: \n"))
-slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+slope_ = float(input("Enter the slope to take in reference, (0 recomended):\n"))
 temp = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
-def verify(file):
+vol_p = int(input("Enter how many candels consider to calculate the volume mean: \n"))
+def verify(file,vol_p = 0):
     # create the index of the df
     index_ = name_col(p,in_)
     index_.append("date")
@@ -31,11 +31,11 @@ def verify(file):
     k = pd.DataFrame(columns = index_)
     #Generate a list to analize the slope with linear regression from cero to rows
     X = [x for x in range(0,p-in_)]
-    for i in range(p,len(file.index)):
+    for i in range(p + vol_p,len(file.index)):
         Y = [file["close"][t] for t in range(i-p,i-in_)]
         rsi_list = [file["rsi"][t] for t in range(i-p,i-in_)]
         slope,intercept, r_value, p_value_2, std_err = linregress(X, Y)
-        vol = [file["volume"][i-x] for x in range(in_ ,p+1)]
+        vol = [file["volume"][i-x] for x in range(in_ ,p + 1 + vol_p)]
         vol_prom = np.mean(vol)
         si_no = 1
         #if the values in the row pass the filter, they are considered to make the predictor model
@@ -46,11 +46,14 @@ def verify(file):
                 si_no = f"{B}"
             else:
                 si_no = "0"
-        # eithercero or B, if the row was considered, is will be added to the df to then execute the predictor
+        # either cero or B, if the row was considered, is will be added to the df to then execute the predictor
         if si_no != 1:
             row = list()
             for t in range(in_ ,p+1):
-                row = row +[file["volume"][i-t] / float(file["volume"][i-p]),
+                row = row +[ 
+                    #file["open"][i-t]/file["low"][i-p],file["close"][i-t]/file["low"][i-p],
+                    #file["high"][i-t]/file["low"][i-p], file["low"][i-t]/file["low"][i-p],
+                    file["volume"][i-t] / float(file["volume"][i-p]),
                 (file["open"][i-t] - file["close"][i-t]) / file["low"][i-t],
                 (file["close"][i-t] - file["open"][i-t]) / file["high"][i-t],
                 (file["high"][i-t]) / (file["low"][i-t]),
@@ -78,10 +81,10 @@ for nam in range(1,len(sys.argv)):
     file = file.reset_index()
 
     if count == 0:
-        v = verify(file)
+        v = verify(file,vol_p)
         count +=1
     else:
-        k = verify(file)
+        k = verify(file,vol_p)
 
         v = pd.concat([v,k],ignore_index=True)
 
@@ -105,5 +108,7 @@ print(classification_report(y_test,predictions))
 print(f"periods rsi: {periods}")
 print(f"in_: {in_}")
 print(f"p: {p}")
+print(f"a: {a}")
 print(f"rows: {rows}")
+print(f"volume: {vol_p}")
 
