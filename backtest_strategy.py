@@ -9,7 +9,7 @@ import numpy as np
 from scipy.stats import linregress
 
 in_ = int(input("Enter the number of candels (Y) that come after the prediction: \n"))
-rows =int(input("Enter the number of candels (X) considered in the model for the prediction:: \n"))
+rows =int(input("Enter the number of candels (X) considered for the technical analysis: \n"))
 periods = int(input("Enter the amount of periods for rsi calculation (14 recomended): \n"))
 a = int(input("Enter how much to increase the mean volume value: \n"))
 rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
