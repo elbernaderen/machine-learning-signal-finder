@@ -105,3 +105,5 @@ How to Install and Run the Project:
 Install Binance library:
 pip install python-binance
 Install Pandas library
+# license:
+MIT [Bernardo Derendinger](https://github.com/elbernaderen)
