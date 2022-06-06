@@ -30,7 +30,7 @@ Enter the number of candels (Y) to consider in the model for the prediction:
 ```
 The increment before mentionated has to be between the Y candels
 ```bash
-Enter the number of candels (X) consider in the model for the prediction:
+Enter the number of candels (X) considered in the model for the prediction:
 ```
 These will be the candels we use to predict
 ```bash
@@ -73,11 +73,11 @@ py backtest_strategy.py
 ```
 Then, the program will ask the next variables:
 ```bash
-Enter the number of candels (Y) to consider in the model for the prediction:
+Enter the number of candels (Y) that come after the prediction:
 ```
 The increment before mentionated has to be between the Y candels
 ```bash
-Enter the number of candels (X) consider in the model for the prediction:
+Enter the number of candels (X) considered for the technical analysis:
 ```
 ```bash
 Enter the amount of periods for rsi calculation (14 recomended):
@@ -87,6 +87,15 @@ A period for rsi calculation can be better for a candle interval analysis, and n
 Enter how much to increase the mean volume value:
 ```
 This is a filter to consider just the candles with a bigger volume than the mean volume of a determined amount of candles
+```bash
+Enter the slope to take in reference, (0 recomended):
+```
+The slope of the close value of the candels indicates if the market (in this sequence) is bullish or bearish.
+```bash
+Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
+```
+The interval of the historical assets to consider.
+Once the program has finished, a .xlsx spreedsheet will be created with a column with the found signals and the consecutive variations respect the close value of the X candels (
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
