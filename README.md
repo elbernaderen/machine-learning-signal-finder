@@ -99,7 +99,7 @@ Once the program has finished, a .xlsx spreedsheet will be created with a column
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/),
-that finds signals with a predictor made with Machine Learning, trained with a some cryptho/usdt database, obtained
+that finds signals with a [predictor](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy) made with Machine Learning, trained with a some cryptho/usdt database, obtained
 with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library .
 ## Must install
 [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
