@@ -95,7 +95,7 @@ The slope of the close value of the candels indicates if the market (in this seq
 Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
 ```
 The interval of the historical assets to consider.
-Once the program has finished, a .xlsx spreedsheet will be created with a column with the found signals and the consecutive variations respect the close value of the X candels (
+Once the program has finished, a .xlsx spreedsheet will be created with a column with the found signals and the consecutive variations of the high and low candels value respect the close value of the X's last candel, so we can verify if prices had rises or fell and modificate the strategy to improve the prediction.
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/),
