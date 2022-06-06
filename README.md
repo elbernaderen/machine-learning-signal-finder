@@ -63,6 +63,31 @@ This program, as it's name says is a backtest for a strategy with a determinated
 ## Description
 With a historical asset, that has been download with **call_bina.py**, this program creates an .xlsx spreadsheet where is the data and the decision of the stratrategy, buy or don't do nothing.
 Taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, if the strategy set fits with the sequence, the column "vale" will be the value of the increment predicted. In all the other cases the value will be 0. Further, a determined number of candles that come next to the sequence analyzed will be added, with the highest and lowest values, so we can know if the strategy is acerted, and with this information we can improve it.
+## Must install
+[pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
+## Usage
+Once we have downloaded the historical asset in the same directory, we call the program:
+
+```bash
+py backtest_strategy.py
+```
+Then, the program will ask the next variables:
+This is the increment that we look for predict, ex: 0.01
+```bash
+Enter the number of candels (Y) to consider in the model for the prediction:
+```
+The increment before mentionated has to be between the Y candels
+```bash
+Enter the number of candels (X) consider in the model for the prediction:
+```
+These will be the candels we use to predict
+```bash
+Enter the amount of periods for rsi calculation (14 recomended):
+```
+A period for rsi calculation can be better for a candle interval analysis, and not for other one, so, it can be modificated if want it
+```bash
+Enter the rsi value to consider (30 recomended):
+```
 # mensajero_d.py
 ## Introduction:
 Here we have a signal bot trading, using telegram (https://python-telegram-bot.readthedocs.io/en/stable/),
