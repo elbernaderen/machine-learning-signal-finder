@@ -156,5 +156,24 @@ with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-cur
 [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
 [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download the actualized data to make the prediction. 
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
+
+# bina.py
+Download the historical assets from [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7).
+
+## Description
+
+
+## Must install
+[Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download the actualized data to make the prediction. 
+Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
+
+
+## Usage
+Once we have downloaded the historical assets (one or more) with the same interval in the same directory of the program, we call the program with the historical assets as command line arguments in capital as:
+
+
+
+
+
 # license:
 MIT [Bernardo Derendinger](https://github.com/elbernaderen)
