@@ -70,7 +70,7 @@ names=["LISTA:"]
 count = 0
 
 for nam in range(1,len(sys.argv)):
-    file =  pd.read_csv(f"{str(sys.argv[nam])}_{temp}_basehs.csv")
+    file =  pd.read_csv(f"{str(sys.argv[nam])}_{temp}_base.csv")
     
     rsi = RSI(file["close"],periods)
     file["rsi"] = rsi
