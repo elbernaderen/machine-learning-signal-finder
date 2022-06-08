@@ -167,7 +167,7 @@ Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data
 
 
 # call_bina.py
-To download the historical assets to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
+To download the historical assets to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
 ## Description
 This script calls the function **store_ohlcv** from [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy), that is used to download the historical asset, setting the name of the asset in capital letters, name of the file that will be created, year, month and day since when take in count.
 ## Must install
