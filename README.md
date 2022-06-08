@@ -170,9 +170,16 @@ Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data
 To download the historical assets to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
 ## Description
 This script calls the function **store_ohlcv** from [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy), that is used to download the historical asset, setting the name of the asset in capital letters, name of the file that will be created, year, month and day since when take in count.
-## Must install
-[Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download historical asset and [pandas](https://pandas.pydata.org/) to work with data frames. 
-Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
+## Usage:
+To download a historical asset for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) and ETHUSDT for ex since a determinated date, must call the function as continue:
 
+```bash
+py call_bina.py ETHUSDT _base 2019 1 1
+```
+To download a historical asset for [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy) and BTCUSDT for ex since a determinated date, must call the function as continue:
+
+```bash
+py call_bina.py BTCUSDT _prueba 2022 3 5
+```
 # license:
 MIT [Bernardo Derendinger](https://github.com/elbernaderen)
