@@ -155,7 +155,7 @@ with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-cur
 ## Must install
 [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists.
 
-will use [bina.py]([https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7](https://github.com/elbernaderen/machine-learning-signal-finder#binapy)) to download the actualized data to make the prediction. 
+will use [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy) to download the actualized data to make the prediction. 
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
 
 # bina.py
