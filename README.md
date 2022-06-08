@@ -174,12 +174,12 @@ This script calls the function **store_ohlcv** from [bina.py](https://github.com
 To download a historical asset for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) and ETHUSDT for ex since a determinated date, must call the function as continue:
 
 ```bash
-py call_bina.py ETHUSDT _base 2019 1 1
+py call_bina.py ETHUSDT base 2019 1 1
 ```
 To download a historical asset for [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy) and BTCUSDT for ex since a determinated date, must call the function as continue:
 
 ```bash
-py call_bina.py BTCUSDT _prueba 2022 3 5
+py call_bina.py BTCUSDT prueba 2022 3 5
 ```
 # license:
 MIT [Bernardo Derendinger](https://github.com/elbernaderen)
