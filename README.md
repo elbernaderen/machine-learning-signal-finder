@@ -11,7 +11,7 @@ Before we create the rows, first we filter them taking in count the slope of the
 
 [sklearn](https://scikit-learn.org/stable/install.html) is a library used to create and train the machine learning model.
 
-[pickle](https://docs.python.org/3/library/pickle.html#:~:text=%E2%80%9CPickling%E2%80%9D%20is%20the%20process%20whereby,back%20into%20an%20object%20hierarchy.) is needed to save the model in a .sav file, so we can use it in a easy way with the backtester **prueba_final.py** or the signal sender **mensajero_d.py**.
+[pickle](https://docs.python.org/3/library/pickle.html#:~:text=%E2%80%9CPickling%E2%80%9D%20is%20the%20process%20whereby,back%20into%20an%20object%20hierarchy.) is needed to save the model in a .sav file, so we can use it in a easy way with the backtester [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_strategypy) or the signal sender [mensajero_d.py](https://github.com/elbernaderen/machine-learning-signal-finder#mensajero_dpy).
 
 
 ## Usage
@@ -107,7 +107,10 @@ With a historical asset, that has been download with **call_bina.py**, this prog
 Using the .sav model/s files, the program predict if the price will increase it's value to achieve the increment predict, and this will be added in a column with the model name.
 Taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, if the variables set fits with the sequence, the column "vale" will be 1 and otherwise will be 0, so it can be used as a filter.the value of the increment predicted. In all the other cases the value will be 0. Further, a determined number of candles that come next to the sequence analyzed will be added, with the highest and lowest values, so we can know if the strategy is acerted, and with this information we can improve it.
 ## Must install
-[pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
+[pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists.
+with [sklearn](https://scikit-learn.org/stable/install.html) we can use the model with the predictor.
+
+[pickle](https://docs.python.org/3/library/pickle.html#:~:text=%E2%80%9CPickling%E2%80%9D%20is%20the%20process%20whereby,back%20into%20an%20object%20hierarchy.) is needed to open the .sav file with the predictor model.
 ## Usage
 Once we have downloaded the historical asset in the same directory, we call the program:
 
@@ -138,6 +141,7 @@ The slope of the close value of the candels indicates if the market (in this seq
 Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
 ```
 The interval of the historical assets to consider.
+
 Once the program has finished, a .xlsx spreedsheet will be created with a column with the found signals and the consecutive variations of the high and low candels value respect the close value of the X's last candel, so we can verify if prices had rises or fell and modificate the strategy to improve the prediction.
 
 
