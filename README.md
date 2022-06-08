@@ -159,22 +159,20 @@ Will use [bina.py](https://github.com/elbernaderen/machine-learning-signal-finde
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
 
 # bina.py
-Download the historical assets from [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7).
-
 ## Description
-
-
+This script contains **store_ohlcv** function, that is used to download the historical asset.
 ## Must install
-[Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download the actualized data to make the prediction. 
+[Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download historical asset and [pandas](https://pandas.pydata.org/) to work with data frames. 
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
 
 
-## Usage
-Once we have downloaded the historical assets (one or more) with the same interval in the same directory of the program, we call the program with the historical assets as command line arguments in capital as:
-
-
-
-
+# call_bina.py
+To download the historical assets to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
+## Description
+This script calls the function **store_ohlcv** from [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy), that is used to download the historical asset, pasing the name of the asset in capital, name of the file that will be created, year, month and day since when take in count.
+## Must install
+[Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download historical asset and [pandas](https://pandas.pydata.org/) to work with data frames. 
+Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
 
 # license:
 MIT [Bernardo Derendinger](https://github.com/elbernaderen)
