@@ -6,7 +6,6 @@ With this script, we run through each historical asset like BTCUSDT or ETHUSDT a
 * macd histogram, 
 * macd signal, 
 * rsi
-
 It also include indicators that express:
 * amplitude of high and low values, 
 * open and closure values, 
@@ -33,6 +32,14 @@ Before we create the rows, first we filter them taking in count the slope of the
 
 ## Usage
 Once we have downloaded the historical assets (one or more) with the same interval in the same directory of the program, we call the program with the historical assets as command line arguments in capital letters as:
+
+If you want to run this code on a virtual environment, use the following
+```bash
+cd src
+python -m venv signalFinder
+source signalFinder/bin/activate #or .\signalFinder\Scripts\Activate.ps1 for Windows 10
+pip install -r requirements.txt
+```
 
 ```bash
 py amplitudes_rsi_vol_rsi.py BTCUSDT ETHUSDT ADAUSDT
