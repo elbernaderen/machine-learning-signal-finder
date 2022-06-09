@@ -7,6 +7,7 @@ With this script, we run through each historical asset like BTCUSDT or ETHUSDT a
 * macd signal, 
 * rsi
 
+
 It also include indicators that express:
 * amplitude of high and low values, 
 * open and closure values, 
