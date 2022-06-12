@@ -183,7 +183,7 @@ This script contains **store_ohlcv** function, that is used to download the Cryp
 [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library to download Crypto-currency Historical Data and [pandas](https://pandas.pydata.org/) to work with data frames. 
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
 ## Usage:
-To use it, we need to have a Binance account. If you don't have one, can create a account following [this](https://www.binance.com/es/activity/referral-entry?fromActivityPage=true&ref=LIMIT_MYXYAGGF) and by doing that will be my refered and also colaborate with this project. Once that you have an account, you need to generate an API, as follows [API](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7). Then, have to set the API_key and the API_ secret in the config yml file located in the ignore folder, 
+To use it, we need to have a Binance account. If you don't have one, can create a account following [this](https://www.binance.com/es/activity/referral-entry?fromActivityPage=true&ref=LIMIT_MYXYAGGF) and by doing that will be my refered and also colaborate with this project. Once that you have an account, you need to generate an API, as [follows](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7). Then, have to set the API_key and the API_ secret in the config yml file located in the ignore folder.
 
 # call_bina.py
 To download the Crypto-currency Historical Data to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
@@ -199,6 +199,9 @@ To download a Crypto-currency Historical Data for [backtest_amplitudes.py](https
 ```bash
 py call_bina.py BTCUSDT prueba 2022 3 5
 ```
-
+# References:
+[Scraping Crypto-currency Historical Data from Binance using python](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7)
+[RSI value](https://programmerclick.com/article/34731200625/) 
+[macd with PANDAS](https://www.alpharithms.com/calculate-macd-python-272222/)
 # license:
 MIT [Bernardo Derendinger](https://github.com/elbernaderen)
