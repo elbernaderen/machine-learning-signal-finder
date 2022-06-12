@@ -20,11 +20,6 @@ user_id = config["user_id"]
 
 bot = telegram.Bot(token=api_key)
 
-in_ = int(
-    input(
-        "Enter the number of candels (Y) considered in the model for the prediction: \n"
-    )
-)
 rows = int(
     input(
         "Enter the number of candels (X) considered in the model for the prediction: \n"
@@ -48,7 +43,6 @@ slope_ = int(
     )
 )
 
-p = in_ + rows
 
 if "d" in interval:
     inter_ = 3600 * 24
@@ -63,7 +57,7 @@ else:
 
 def make_prediction(file):
     # this function generates a row with the candels choosen, so the predictor can make the prediction
-    index_ = name_col(p, in_)
+    index_ = name_col(rows)
     index_.append("date")
     index_.append("close")
     new = pd.DataFrame(columns=index_)

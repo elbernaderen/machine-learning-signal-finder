@@ -22,15 +22,21 @@ rows = int(
 periods = int(
     input("Enter the amount of periods for rsi calculation (14 recomended): \n")
 )
-a = int(input("Enter how much to increase the mean volume value: \n"))
-rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+a = int(
+    input("Enter how much to increase the mean volume value: \n")
+    )
+rsi_ = int(
+    input("Enter the rsi value to consider (30 recomended): \n")
+    )
 nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
-slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+slope_ = int(
+    input("Enter the slope to take in reference, (0 recomended):\n")
+    )
 p = rows + in_
 # in_ is the number of candles we consider to know if the price rises or fall
 def actual(file):
-    index_ = name_col(p, in_)
+    index_ = name_col(rows)
     index_.extend(["date", "close", "vale"])
     index_.extend(name_col_2(in_))
     print(len(index_))
@@ -50,8 +56,9 @@ def actual(file):
                 file["volume"][K - 2] > vol_prom * a
                 or file["volume"][K - 1] > vol_prom * a
             )
-            and (file["rsi"][i - in_] < rsi_ or file["rsi"][i - in_ - 1] < rsi_)
-        ):
+            and 
+            (file["rsi"][i - in_] < rsi_ or file["rsi"][i - in_ - 1] < rsi_)
+            ):
             vale = 1
         for t in range(in_, p + 1):
             row = row + [
@@ -78,7 +85,7 @@ def actual(file):
     return new
 
 
-file = pd.read_csv(f"{nam}_30m_prueba.csv")
+file = pd.read_csv(f"prueba/{nam}_30m_prueba.csv")
 rsi = RSI(file["close"], periods)
 file["rsi"] = rsi
 file = macd(file)
@@ -112,4 +119,4 @@ for na_sav in range(1, len(sys.argv)):
     )
 st = str(datetime.datetime.now())
 
-df_down.to_excel(f"{nam}{st[0:13]}.xlsx", sheet_name="NUMBERS")
+df_down.to_excel(f"data/{nam}amp{st[0:13]}.xlsx", sheet_name="NUMBERS")

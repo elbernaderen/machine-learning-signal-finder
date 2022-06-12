@@ -3,7 +3,7 @@ import pandas as pd
 from tools.tools import name_col, RSI, macd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import classification_report
 import pickle
 import datetime
 import numpy as np
@@ -41,7 +41,7 @@ vol_p = int(input("Enter how many candels consider to calculate the volume mean:
 
 def verify(file, vol_p=0):
     # create the index of the df
-    index_ = name_col(p, in_)
+    index_ = name_col(rows)
     index_.append("date")
     index_.append("buy")
     k = pd.DataFrame(columns=index_)
@@ -95,7 +95,7 @@ names = ["LISTA:"]
 count = 0
 
 for nam in range(1, len(sys.argv)):
-    file = pd.read_csv(f"{str(sys.argv[nam])}_{temp}_base.csv")
+    file = pd.read_csv(f"base/{str(sys.argv[nam])}_{temp}_base.csv")
 
     rsi = RSI(file["close"], periods)
     file["rsi"] = rsi
@@ -114,7 +114,7 @@ for nam in range(1, len(sys.argv)):
     names.append(str(sys.argv[nam]))
 y = v.buy
 # columns to use to run the rfc
-features = name_col(p, in_)
+features = name_col(rows)
 X = v[features]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=10
@@ -131,7 +131,7 @@ print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
 print(names)
 print(classification_report(y_test, predictions))
 print(f"periods rsi: {periods}")
-print(f"in_: {in_}")
+print(f"Y candels: {in_}")
 print(f"p: {p}")
 print(f"a: {a}")
 print(f"rows: {rows}")

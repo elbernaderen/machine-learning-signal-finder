@@ -66,7 +66,7 @@ def actual(file):
     return new
 
 
-file = pd.read_csv(f"{name}_30m_prueba.csv")
+file = pd.read_csv(f"prueba/{name}_30m_prueba.csv")
 rsi = RSI(file["close"], periods)
 file["rsi"] = rsi
 file = macd(file)
@@ -80,4 +80,4 @@ df_down = df_actual[index_]
 
 st = str(datetime.datetime.now())
 
-df_down.to_excel(f"{name}_{a}_{rsi_}.xlsx", sheet_name="NUMBERS")
+df_down.to_excel(f"data/{name}strategy_{a}_{rsi_}.xlsx", sheet_name="NUMBERS")

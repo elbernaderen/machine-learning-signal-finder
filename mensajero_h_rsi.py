@@ -4,8 +4,6 @@ import pandas as pd
 import datetime
 import time
 from bina.bina import store_ohlcv
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-from sklearn.ensemble import RandomForestClassifier
 import telegram
 from tools.tools import RSI
 import numpy as np
@@ -18,7 +16,10 @@ api_key = config["api_key"]
 user_id = config["user_id"]
 bot = telegram.Bot(token=api_key)
 
-rows = int(input("Enter the number of candels to analize: \n"))
+rows = int(
+    input("Enter the number of candels to analize: \n"
+    )
+)
 periods = int(
     input("Enter the amount of periods for rsi calculation (14 recomended): \n")
 )
@@ -51,12 +52,12 @@ while True:
         inter_ -= 60
         print("check your internet connection\n")
         kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="_mensajero"
+            symbol=nam, interval=interval, start_date=tt, name="mensajero"
         )
     # wait to download the csv file
     time.sleep(30)
     inter_ -= 30
-    file = pd.read_csv(f"{nam}_{interval}_mensajero.csv")
+    file = pd.read_csv(f"mensajero/{nam}_{interval}_mensajero.csv")
     Y = [file["close"][t] for t in range(len(file) - rows, len(file))]
     slope, intercept, r_value, p_value_2, std_err = linregress(X, Y)
     rsi = RSI(file["close"], periods)
