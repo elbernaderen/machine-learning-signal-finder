@@ -176,6 +176,7 @@ Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data
 ## Usage:
 As this bot use Telegram to send messagess, we'll need the user id of the receiver and the API key from the count of telegram that we'll use, and this data will be set in the yml file **telconfig** that is in the ignore folder. 
 
+
 # bina.py
 ## Description
 This script contains **store_ohlcv** function, that is used to download the Crypto-currency Historical Data.
