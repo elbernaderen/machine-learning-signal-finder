@@ -2,7 +2,6 @@ import sys
 from tkinter import N
 import pandas as pd
 import datetime
-import winsound
 import time
 from bina.bina import store_ohlcv
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
@@ -28,17 +27,26 @@ in_ = int(
 )
 rows = int(
     input(
-        "Enter the number of candels (X) considered in the model for the prediction:: \n"
+        "Enter the number of candels (X) considered in the model for the prediction: \n"
     )
 )
 periods = int(
     input("Enter the amount of periods for rsi calculation (14 recomended): \n")
 )
-a = int(input("Enter how much to increase the mean volume value: \n"))
-rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+a = int(
+    input("Enter how much to increase the mean volume value: \n"
+    )
+)
+rsi_ = int(
+    input("Enter the rsi value to consider (30 recomended): \n"
+    )
+)
 nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
-slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+slope_ = int(
+    input("Enter the slope to take in reference, (0 recomended):\n"
+    )
+)
 
 p = in_ + rows
 
@@ -103,13 +111,13 @@ while True:
         inter_ -= 60
         print("check your internet connection\n")
         kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="_mensajero"
+            symbol=nam, interval=interval, start_date=tt, name="mensajero"
         )
     # wait to download the csv file
     time.sleep(30)
     inter_ -= 30
 
-    file = pd.read_csv(f"{nam}_{interval}_mensajero.csv")
+    file = pd.read_csv(f"mensajero/{nam}_{interval}_mensajero.csv")
     rsi = RSI(file["close"], periods)
     file["rsi"] = rsi
     file = macd(file)
