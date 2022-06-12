@@ -200,8 +200,8 @@ To download a Crypto-currency Historical Data for [backtest_amplitudes.py](https
 py call_bina.py BTCUSDT prueba 2022 3 5
 ```
 # References:
-[Scraping Crypto-currency Historical Data from Binance using python](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7)
-[RSI value](https://programmerclick.com/article/34731200625/) 
-[macd with PANDAS](https://www.alpharithms.com/calculate-macd-python-272222/)
+* [Scraping Crypto-currency Historical Data from Binance using python](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7)
+* [RSI value](https://programmerclick.com/article/34731200625/) 
+* [macd with PANDAS](https://www.alpharithms.com/calculate-macd-python-272222/)
 # license:
 MIT [Bernardo Derendinger](https://github.com/elbernaderen)
