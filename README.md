@@ -165,12 +165,14 @@ Once the program has finished, a .xlsx spreadsheet will be created with a column
 
 # mensajero_d.py
 ## Description
-Here we have a signal bot trading, that using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/) sends signals with a [predictor](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy) made with Machine Learning, trained with a some crypto-currency historical database, obtained
+Here we have a signal bot trading, that using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/) sends signals found with a [predictor](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy) made with Machine Learning, trained with a some crypto-currency historical database, obtained
 with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library.
 ## Must install
 [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
+With [sklearn](https://scikit-learn.org/stable/install.html) we can use the model with the predictor. 
 
 Will use [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy) to download the actualized data to make the prediction. 
+
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
 ## Usage:
 As this bot use Telegram to send messagess, we'll need the user id of the receiver and the API key from the count of telegram that we'll use, and this data will be set in the yml file **telconfig** that is in the ignore folder. 
@@ -214,6 +216,65 @@ This is the interval of time between each analysis of the bot. For example, if w
 ```bash
 Enter the slope to take in reference, (0 recomended):
 ```
+The slope of the close value of the candels indicates if the market (in this sequence) is bullish or bearish.
+
+
+
+
+# mensajero_h_rsi.py
+## Description
+Here we have a signal bot trading, that using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/) sends signals obtained 
+from some technical analysis, taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels. If the strategy set fits with the sequence obtained with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library, 
+## Must install
+[Pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
+
+Will use [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy) to download the actualized data to make the prediction. 
+Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
+## Usage:
+As this bot use Telegram to send messagess, we'll need the user id of the receiver and the API key from the count of telegram that we'll use, and this data will be set in the yml file **telconfig** that is in the ignore folder. 
+We must be call the program in console as continue:
+
+```bash
+py mensajero_h_rsi.py
+```
+Then the program will ask to enter the next variables:
+```bash
+Enter the number of candels (X) considered in the model for the prediction:
+```
+The number of candels that will be used to make the prediction, must be equal to the number used in the [model](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) 
+```bash
+Enter the amount of periods for rsi calculation (14 recomended):
+```
+A period for rsi calculation can be better for a candle interval analysis, and not for other one, so, it can be modificated if want it
+
+```bash
+Enter how much to increase the mean volume value:
+```
+This is a filter to consider just the candles with a bigger volume than the mean volume of a determined amount of candles
+```bash
+Enter the rsi value to consider (30 recomended):
+```
+The RSI value is a indicator for some strategies in crypto-trading, so it also can be modificated as a superior limit (the script can be easily changeable)
+
+```bash
+Enter the name of the symbol, ex BTCUSDT:
+```
+The symbol of the crypto-currency from which we want the signals.
+```bash
+Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
+```
+This is the interval of time between each analysis of the bot. For example, if we choose 1h, the bot will download an historical data to predict if to buy or not, every hour. 
+```bash
+Enter the slope to take in reference, (0 recomended):
+```
+The slope of the close value of the candels indicates if the market (in this sequence) is bullish or bearish.
+
+
+
+
+
+
+
 
 # bina.py
 ## Description
