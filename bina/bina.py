@@ -5,7 +5,7 @@ import yaml
 import datetime
 
 # import config
-config = yaml.load(open('machine-learning-signal-finder/ignore/config.yml'), Loader=yaml.FullLoader)
+config = yaml.load(open('ignore/config.yml'), Loader=yaml.FullLoader)
 
 # create client
 try:
@@ -26,6 +26,6 @@ def store_ohlcv(symbol = "LINKUSDT", interval='1h', start_date=datetime.datetime
     # remove the useless column and the last row as it is the current candle, therefore is not completed
     df = df.drop('ignore', axis=1).iloc[:-1]
     # store data as a csv file
-    df.to_csv(f"{symbol}_{interval}_{name}.csv")
+    df.to_csv(f"{name}/{symbol}_{interval}_{name}.csv")
 
 
