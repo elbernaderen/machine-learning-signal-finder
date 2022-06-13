@@ -2,13 +2,14 @@
 Fit a crypto trade predictor model with a determined sequence of candels from different assets.
 ## Description
 With this script, we run through each Crypto-currency Historical Data like BTCUSDT or ETHUSDT and generate numerous rows with a determinated number of candels. For each candel add technical indicators like:
-* macd, 
-* macd histogram, 
-* macd signal, 
-* rsi
+* macd 
+* macd histogram 
+* macd signal 
+* RSI 
+
 It also include indicators that express:
-* amplitude of high and low values, 
-* open and closure values, 
+* amplitude of high and low values 
+* open and closure values 
 * normalized volume 
 * open, close, high and low normalized values (added as a comment). 
 
