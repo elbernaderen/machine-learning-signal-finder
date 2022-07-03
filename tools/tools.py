@@ -1,15 +1,12 @@
 import numpy as np
-import pandas as pd
 
 ######################################################################################################
+# name generator
+
 def name_col(rows):
     ind_row = rows + 1
     index_ = list()
     for cin in range(ind_row):
-        #index_.append(f"open_{cin}")
-        #index_.append(f"close_{cin}")
-        #index_.append(f"high_{cin}")
-        # index_.append(f"low_{cin}")
         index_.append(f"volume_{cin}")
         index_.append(f"mart_{cin}")
         index_.append(f"mart_inv_{cin}")
@@ -69,25 +66,41 @@ def RSI(t, periods=10):
 ######################################################################################################
 
 def macd(file):
+
+    # A DataFrame is received
+
     df=file
     k = df['close'].ewm(span=12, adjust=False, min_periods=12).mean()
-# Get the 12-day EMA of the closing price
+
+    # Get the 12-day EMA of the closing price
+
     d = df['close'].ewm(span=26, adjust=False, min_periods=26).mean()
-# Subtract the 26-day EMA from the 12-Day EMA to get the MACD
+
+    # Subtract the 26-day EMA from the 12-Day EMA to get the MACD
+
     macd = k - d
-# Get the 9-Day EMA of the MACD for the Trigger line
+
+    # Get the 9-Day EMA of the MACD for the Trigger line
+
     macd_s = macd.ewm(span=9, adjust=False, min_periods=9).mean()
-# Calculate the difference between the MACD - Trigger for the Convergence/Divergence value
+
+    # Calculate the difference between the MACD - Trigger for the Convergence/Divergence value
+
     macd_h = macd - macd_s
-# Add all of our new values for the MACD to the dataframe
+
+    # Add all of our new values for the MACD to the dataframe
+
     df['macd'] = df.index.map(macd)
     df['macd_h'] = df.index.map(macd_h)
     df['macd_s'] = df.index.map(macd_s)
+
     return df
 
 ######################################################################################################
 
 ######################################################################################################
+
+# name generator for the backtest
 
 def name_col_2(in_):
     ind_row = in_
