@@ -152,18 +152,32 @@ y = v.buy
 # columns to use to run the rfc
 
 features = name_col(rows)
+
 X = v[features]
+
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=10
 )
+
 rfc = RandomForestClassifier(n_estimators=2000)
+
 rfc.fit(X_train, y_train)
+
 predictions = rfc.predict(X_test)
+
+# To assign a name of the predictor model file we use some variables and the date and hour when it was created
 st = str(datetime.datetime.now())
+
 st = st.replace(" ", "_")
+
 st = st.replace(":", "_")
-filename = f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
-pickle.dump(rfc, open(filename, "wb"))
+
+filename_ = f"rows{rows}_periods_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
+
+# pickle creates a .sav file with the rfc model so we can use it with the backtesting or the messenger,
+# and names it as filename_
+
+pickle.dump(rfc, open(filename_, "wb"))
 
 ######################################################################################################
 # RESULTS
