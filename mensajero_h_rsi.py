@@ -23,11 +23,20 @@ rows = int(
 periods = int(
     input("Enter the amount of periods for rsi calculation (14 recomended): \n")
 )
-a = int(input("Enter how much to increase the mean volume value: \n"))
-rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+a = int(
+    input("Enter how much to increase the mean volume value: \n"
+    )
+)
+rsi_ = int(
+    input("Enter the rsi value to consider (30 recomended): \n"
+    )
+)
 nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
-slope_ = int(input("Enter the slope to take in reference, (0 recomended):\n"))
+slope_ = int(
+    input("Enter the slope to take in reference, (0 recomended):\n"
+    )
+)
 if "d" in interval:
     inter_ = 3600 * 24
     hours = 24 * 150
@@ -45,14 +54,14 @@ while True:
     tt = hour_ - hour
     try:
         kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="_mensajero"
+            symbol=nam, interval=interval, start_date=tt, name = "_mensajero"
         )
     except ConnectionError:
         time.sleep(60)
         inter_ -= 60
         print("check your internet connection\n")
         kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="mensajero"
+            symbol=nam, interval=interval, start_date=tt, name = "mensajero"
         )
     # wait to download the csv file
     time.sleep(30)
