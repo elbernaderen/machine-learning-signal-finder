@@ -9,6 +9,9 @@ import datetime
 import numpy as np
 from scipy.stats import linregress
 
+
+######################################################################################################
+# PROGRAM DEFINITIONS
 # B is the rise percent of the candles next to the close of the last candle
 #  that we use to decide if this sequence anticipate a rise
 
@@ -23,21 +26,82 @@ in_ = int(
         "Enter the number of candels (Y) to consider in the model for the prediction: \n"
     )
 )
+# Number of candels to consider for the prediction
 rows = int(
     input(
         "Enter the number of candels (X) consider in the model for the prediction: \n"
     )
 )
+#The relative strength index (RSI) is a momentum indicator
+#  used in technical analysis that measures the magnitude 
+# of recent price changes to evaluate overbought or oversold 
+# conditions in the price of a stock or other asset 
+
+rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
+
+# The number of the previous candlesticks (periods) is the main setting 
+# of the indicator called a period. By default Period = 14; this is the value the author used.
+
 periods = int(
     input("Enter the amount of periods for rsi calculation (14 recomended): \n")
 )
-rsi_ = int(input("Enter the rsi value to consider (30 recomended): \n"))
 p = rows + in_
-a = int(input("Enter how much to increase the mean volume value: \n"))
-slope_ = float(input("Enter the slope to take in reference, (0 recomended):\n"))
-temp = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
-vol_p = int(input("Enter how many candels consider to calculate the volume mean: \n"))
 
+a = int(input("Enter how much to increase the mean volume value: \n"))
+
+slope_ = float(input("Enter the slope to take in reference, (0 recomended):\n"))
+
+temp = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+
+vol_p = int(input("Enter how many candels consider to calculate the volume mean: \n"))
+# List that'll be filled with the different Crypto-currency used
+names = ["LISTA:"]
+
+# counter uesd in the main program, 
+count = 0
+
+######################################################################################################
+
+
+######################################################################################################
+# MAIN PROGRAM 
+
+for nam in range(1, len(sys.argv)):
+    file = pd.read_csv(f"base/{str(sys.argv[nam])}_{temp}_base.csv")
+
+    rsi = RSI(file["close"], periods)
+    file["rsi"] = rsi
+    file = macd(file)
+    file.drop(index=file.index[:95], axis=0, inplace=True)
+    file = file.reset_index()
+
+    if count == 0:
+        v = verify(file, vol_p)
+        count += 1
+    else:
+        k = verify(file, vol_p)
+
+        v = pd.concat([v, k], ignore_index=True)
+
+    names.append(str(sys.argv[nam]))
+y = v.buy
+# columns to use to run the rfc
+features = name_col(rows)
+X = v[features]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=10
+)
+rfc = RandomForestClassifier(n_estimators=2000)
+rfc.fit(X_train, y_train)
+predictions = rfc.predict(X_test)
+st = str(datetime.datetime.now())
+st = st.replace(" ", "_")
+st = st.replace(":", "_")
+filename = f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
+pickle.dump(rfc, open(filename, "wb"))
+
+######################################################################################################
+######################################################################################################
 
 def verify(file, vol_p=0):
     # create the index of the df
@@ -90,43 +154,6 @@ def verify(file, vol_p=0):
         k = k.dropna()
     return k
 
-
-names = ["LISTA:"]
-count = 0
-
-for nam in range(1, len(sys.argv)):
-    file = pd.read_csv(f"base/{str(sys.argv[nam])}_{temp}_base.csv")
-
-    rsi = RSI(file["close"], periods)
-    file["rsi"] = rsi
-    file = macd(file)
-    file.drop(index=file.index[:95], axis=0, inplace=True)
-    file = file.reset_index()
-
-    if count == 0:
-        v = verify(file, vol_p)
-        count += 1
-    else:
-        k = verify(file, vol_p)
-
-        v = pd.concat([v, k], ignore_index=True)
-
-    names.append(str(sys.argv[nam]))
-y = v.buy
-# columns to use to run the rfc
-features = name_col(rows)
-X = v[features]
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=10
-)
-rfc = RandomForestClassifier(n_estimators=2000)
-rfc.fit(X_train, y_train)
-predictions = rfc.predict(X_test)
-st = str(datetime.datetime.now())
-st = st.replace(" ", "_")
-st = st.replace(":", "_")
-filename = f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
-pickle.dump(rfc, open(filename, "wb"))
 print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
 print(names)
 print(classification_report(y_test, predictions))
