@@ -1,14 +1,15 @@
 # amplitudes.py
-Fit a crypto trade predictor model with a determined sequence of candels from different assets.
+Fit a crypto trade predictor model with a determined sequence of candels from different Cryptocurrency.
 ## Description
 With this script, we run through each Crypto-currency Historical Data like BTCUSDT or ETHUSDT and generate numerous rows with a determinated number of candels. For each candel add technical indicators like:
-* macd, 
-* macd histogram, 
-* macd signal, 
-* rsi
+* macd 
+* macd histogram 
+* macd signal 
+* RSI 
+
 It also include indicators that express:
-* amplitude of high and low values, 
-* open and closure values, 
+* amplitude of high and low values 
+* open and closure values 
 * normalized volume 
 * open, close, high and low normalized values (added as a comment). 
 
@@ -16,9 +17,9 @@ With all those indicators, we try to find a pattern in prices movement that allo
 
 If the price increase its value in an determinated percent, we assign this row or sequence as a forecast or prevision of value rise with the determinated "increase", and for any other case we consider that is not allowing us to predict anything and assign it as "0".
 
-Once we have ran over all the Crypto-currency Historical Data we determined and generated the mentionated rows with its assigned values, it's time to train the Random Tree Forest model.
+Once we have ran over all the Cryptocurrency Historical Data we determined and generated the mentionated rows with its assigned values, it's time to train the Random Tree Forest model.
 
-Then, with the model we can predict if the prices will rise and send a signal with the telegram bot, and so we'll know if have to buy or not an Crypto determined.
+Then, with the model we can predict if the prices will rise and send a signal with the telegram bot, and so we'll know if have to buy or not an Cryptocurrency determined.
 
 Before we create the rows, first we filter them taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, and just if the candel sequence fit the requirements the row mentionated is created and considered for the predictor.
 
@@ -31,7 +32,7 @@ Before we create the rows, first we filter them taking in count the slope of the
 
 
 ## Usage
-Once we have downloaded the Crypto-currency Historical Data (one or more) with the same interval in the same directory of the program, we call the program with the Crypto-currency  as command line arguments in capital letters as:
+Once we have downloaded the Cryptocurrency Historical Data (one or more) with the same interval in the same directory of the program, we call the program with the Crypto-currency  as command line arguments in capital letters as:
 
 ```bash
 py amplitudes_rsi_vol_rsi.py BTCUSDT ETHUSDT ADAUSDT
