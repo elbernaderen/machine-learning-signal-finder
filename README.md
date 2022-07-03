@@ -28,7 +28,7 @@ Before we create the rows, first we filter them taking in count the slope of the
 
 [sklearn](https://scikit-learn.org/stable/install.html) is a library used to create and train the machine learning model.
 
-[pickle](https://docs.python.org/3/library/pickle.html#:~:text=%E2%80%9CPickling%E2%80%9D%20is%20the%20process%20whereby,back%20into%20an%20object%20hierarchy.) is needed to save the model in a .sav file, so we can use it in a easy way with the backtester [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_strategypy) or the signal sender [mensajero_d.py](https://github.com/elbernaderen/machine-learning-signal-finder#mensajero_dpy).
+[pickle](https://docs.python.org/3/library/pickle.html#:~:text=%E2%80%9CPickling%E2%80%9D%20is%20the%20process%20whereby,back%20into%20an%20object%20hierarchy.) is needed to save the model in a .sav file, so we can use it in a easy way with the backtester [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_strategypy) or the signal sender [messenger_d.py](https://github.com/elbernaderen/machine-learning-signal-finder#mensajero_dpy).
 
 
 ## Usage
@@ -164,7 +164,7 @@ Once the program has finished, a .xlsx spreadsheet will be created with a column
 
 
 
-# mensajero_d.py
+# messengero_d.py
 ## Description
 Here we have a signal bot trading, that using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/) sends signals found with a [predictor](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy) made with Machine Learning, trained with a some crypto-currency historical database, obtained
 with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library.
@@ -236,7 +236,7 @@ As this bot use Telegram to send messagess, we'll need the user id of the receiv
 We must be call the program in console as continue:
 
 ```bash
-py mensajero_h_rsi.py
+py messenger_h_rsi.py
 ```
 Then the program will ask to enter the next variables:
 ```bash
