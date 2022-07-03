@@ -39,7 +39,7 @@ rows = int(
 )
 
 # The relative strength index (RSI) is a momentum indicator
-#  used in technical analysis that measures the magnitude 
+# used in technical analysis that measures the magnitude 
 # of recent price changes to evaluate overbought or oversold 
 # conditions in the price of a stock or other asset 
 
@@ -61,7 +61,7 @@ slope_ = float(input("Enter the slope to take in reference, (0 recomended):\n"))
 
 # temp is the interval to consider, ex: 1d or 1h or 30m or 15m or 5m for each candlestick
 
-temp = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
 
 # vol_p is the number that will be used to calculate the volume mean
 
@@ -83,7 +83,6 @@ count = 0
 
 ######################################################################################################
 
-
 ######################################################################################################
 # MAIN PROGRAM 
 
@@ -93,7 +92,7 @@ for nam in range(1, len(sys.argv)):
 
     # file is a DataFrame created since the csv file with the historical Crypto-currency data
 
-    file = pd.read_csv(f"base/{str(sys.argv[nam])}_{temp}_base.csv")
+    file = pd.read_csv(f"base/{str(sys.argv[nam])}_{interval}_base.csv")
 
     # rsi is a list with each candel RSI value
 
@@ -113,7 +112,7 @@ for nam in range(1, len(sys.argv)):
 
     file.drop(index = file.index[:95], axis=0, inplace=True)
 
-    # After 
+    # Reset the index after the first 95 rows are been deleted
 
     file = file.reset_index()
 
@@ -180,12 +179,14 @@ filename_ = f"rows{rows}_periods_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
 pickle.dump(rfc, open(filename_, "wb"))
 
 ######################################################################################################
+
+######################################################################################################
 # RESULTS
 # name of the .sav file
 
 print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
 
-# name of the historical Crypto-currency data used
+# name is the list of the historical Crypto-currency data used
 
 print(names)
 
@@ -204,10 +205,15 @@ print(f"rows: {rows}")
 print(f"Candels used to calculate volume: {vol_p}")
 
 ######################################################################################################
+
+######################################################################################################
 # FUNCTIONS
 
 def verify(file):
+    # verify requires a DataFrame and use the values defined before
+
     # create the index of the df
+
     index_ = name_col(rows)
     index_.append("date")
     index_.append("buy")
@@ -281,8 +287,11 @@ def verify(file):
                     file["macd_s"][i - t],
                 ]
             row = row + [file["date"][i - in_], buy_decide]
+
             k.loc[len(k.index)] = row
+
+        # The Nan values must be dropped
         k = k.dropna()
     return k
 
-
+######################################################################################################

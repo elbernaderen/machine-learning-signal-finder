@@ -1,13 +1,18 @@
 import sys
 import pandas as pd
 import datetime
-import time
+
 from tools.tools import name_col, RSI, macd, name_col_2
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
 from sklearn.ensemble import RandomForestClassifier
 import pickle
 import numpy as np
 from scipy.stats import linregress
+
+######################################################################################################
+# PROGRAM DEFINITIONS
+
+# in_ is the number of candles we consider to know if the price rises or fall
 
 in_ = int(
     input(
@@ -35,7 +40,80 @@ slope_ = int(
     )
 p = rows + in_
 # in_ is the number of candles we consider to know if the price rises or fall
-def actual(file):
+
+######################################################################################################
+
+######################################################################################################
+# MAIN PROGRAM 
+ # file is a DataFrame created since the csv file with the historical Crypto-currency data
+
+ # file is a DataFrame created since the csv file with the historical Crypto-currency data
+
+file = pd.read_csv(f"prueba/{nam}_30m__backtest.csv")
+
+# rsi is a list with each candel RSI value
+
+rsi = RSI(file["close"], periods)
+
+# Here the RSI list is added to the dataframe file
+
+file["rsi"] = rsi
+
+# The macd function receives a DataFrame and add to it the
+# macd, macd_h and macd_s columns
+
+file = macd(file)
+
+# Here we delete the first 95 columns because the firts RSI values are 
+# erroneous
+
+file.drop(index=file.index[:95], axis=0, inplace=True)
+
+# Reset the index after the first 95 rows are been deleted
+
+file = file.reset_index()
+
+# Once we have the DataFrame with the technical indicators, we call backtest function
+
+df_actual = backtest_prepare(file)
+
+
+columns_down = ["date", "close"]
+columns_down.extend(name_col_2(in_))
+columns_down.extend(["vale"])
+
+df_down = df_actual[columns_down]
+
+# if are there more than one model of predictor
+
+for na_sav in range(1, len(sys.argv)):
+
+    print(str(sys.argv[na_sav]))
+    exc = str(sys.argv[na_sav])
+    filename = f"{exc}.sav"
+    rfc = pickle.load(open(filename, "rb"))
+    df_down[f"{exc}"] = df_actual.apply(
+        lambda row: pred(row, df_actual.columns, rfc), axis=1
+    )
+
+st = str(datetime.datetime.now())
+
+df_down.to_excel(f"data/{nam}_amp_{st[0:13]}.xlsx", sheet_name="NUMBERS")
+
+######################################################################################################
+
+######################################################################################################
+# FUNCTIONS
+
+def pred(row, col, rfc):
+    rfc = rfc
+    new = pd.DataFrame(columns=col)
+    new = new.append(row, ignore_index=True)
+    index_ = name_col(p, in_)
+    response = float(rfc.predict(new[index_]))
+    return response
+
+def backtest_prepare(file):
     index_ = name_col(rows)
     index_.extend(["date", "close", "vale"])
     index_.extend(name_col_2(in_))
@@ -84,39 +162,4 @@ def actual(file):
         new.loc[i] = row
     return new
 
-
-file = pd.read_csv(f"prueba/{nam}_30m_prueba.csv")
-rsi = RSI(file["close"], periods)
-file["rsi"] = rsi
-file = macd(file)
-file.drop(index=file.index[:95], axis=0, inplace=True)
-file = file.reset_index()
-df_actual = actual(file)
-
-
-def pred(row, col, rfc):
-    rfc = rfc
-    new = pd.DataFrame(columns=col)
-    new = new.append(row, ignore_index=True)
-    index_ = name_col(p, in_)
-    response = float(rfc.predict(new[index_]))
-    return response
-
-
-columns_down = ["date", "close"]
-columns_down.extend(name_col_2(in_))
-columns_down.extend(["vale"])
-
-df_down = df_actual[columns_down]
-# if are there more than one model of predictor
-for na_sav in range(1, len(sys.argv)):
-    print(str(sys.argv[na_sav]))
-    exc = str(sys.argv[na_sav])
-    filename = f"{exc}.sav"
-    rfc = pickle.load(open(filename, "rb"))
-    df_down[f"{exc}"] = df_actual.apply(
-        lambda row: pred(row, df_actual.columns, rfc), axis=1
-    )
-st = str(datetime.datetime.now())
-
-df_down.to_excel(f"data/{nam}amp{st[0:13]}.xlsx", sheet_name="NUMBERS")
+######################################################################################################
