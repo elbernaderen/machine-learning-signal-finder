@@ -89,85 +89,123 @@ rfc_1 = pickle.load(open(filename_1, "rb"))
 
 X = [x for x in range(0, rows)]
 
-while True:
+
+def main():
+
+   while True: 
+        # The signal finder is activated, and it will keep working
+        # according to the interval choosed
+
+        inter_ = interval_
+
+        # To make an analysis and determine if we have to buy or just wait, 
+        # we need to download several seconds before the last candle, 
+        # so the variable tt will be the start date of the data to download
+
+
+        hour = datetime.timedelta(hours = hours)
+        hour_ = datetime.datetime.utcnow()
+        tt = hour_ - hour
     
-    # The signal finder is activated, and it will keep working
-    # according to the interval choosed
+        # If at the moment of download the historical data, 
+        # the internet is gone, the program will fail. 
+        # So we add an Exception 
 
-    inter_ = interval_
+        try:
+            kk = store_ohlcv(
+                symbol=nam, 
+                interval = interval,
+                start_date = tt, 
+                name = "messenger"
+            )
+        except ConnectionError:
+            
+            # If the internet is gone, we'll wait 60 seconds, and'll try again
 
-    # To make an analysis and determine if we have to buy or just wait, 
-    # we need to download several seconds before the last candle, 
-    # so the variable tt will be the start date of the data to download
+            time.sleep(60)
 
+            inter_ -= 60
 
-    hour = datetime.timedelta(hours = hours)
-    hour_ = datetime.datetime.utcnow()
-    tt = hour_ - hour
-    
-    # If at the moment of download the historical data, 
-    # the internet is gone, the program will fail. 
-    # So we add an Exception 
+            print("check your internet connection\n")
 
-    try:
-        kk = store_ohlcv(
-            symbol=nam, 
-            interval = interval,
-            start_date = tt, 
-            name = "messenger"
-        )
-    except ConnectionError:
-        # If the internet is gone, we'll wait 60 seconds, and'll try again
-
-        time.sleep(60)
-        inter_ -= 60
-        print("check your internet connection\n")
-        kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="messenger"
-        )
+            kk = store_ohlcv(
+                symbol = nam, 
+                interval = interval, 
+                start_date = tt, 
+                name = "messenger"
+            )
 
     # wait to download the csv file
 
-    time.sleep(30)
-    inter_ -= 30
+        time.sleep(30)
+        inter_ -= 30
+    # Every time that pass the interval of established time,
+    #  the csv file with the data is download in the "messenger" directory, 
+    # and this last file will replace the previous one and a DataFrame will be created
 
-    file = pd.read_csv(f"messenger/{nam}_{interval}_messenger.csv")
-    rsi = RSI(file["close"], periods)
-    file["rsi"] = rsi
-    file = macd(file)
-    file.drop(index=file.index[:95], axis=0, inplace=True)
-    file = file.reset_index()
-    rsi = RSI(file["close"], periods)
-    file["rsi"] = rsi
+        file = pd.read_csv(f"messenger/{nam}_{interval}_messenger.csv")
+
+    # Then, the df must be edited and the RSI and macd columns must be appended
+
+    # rsi is a list with each candel RSI value
+
+        rsi = RSI(file["close"], periods)
+
+    # Here the RSI list is added to the dataframe file
+
+        file["rsi"] = rsi
+
+    # The macd function receives a DataFrame and add to it the
+    # macd, macd_h and macd_s columns
+
+        file = macd(file)
+
+    # Here we delete the first 95 columns because the firts RSI values are 
+    # erroneous
+
+        file.drop(index=file.index[:95], axis=0, inplace=True)
+
+    # Reset the index after the first 95 rows are been deleted
+
+        file = file.reset_index()
+
     # Generate a list to analize the slope with linear regression whit the close values
-    Y = [file["close"][t] for t in range(len(file) - rows, len(file))]
-    slope, intercept, r_value, p_value_2, std_err = linregress(X, Y)
-    # generate a list with every volume value of the rows
-    vol = [file["volume"][x] for x in range(len(file) - rows, len(file))]
-    # calculate the mean value of the volume list
-    vol_prom = np.mean(vol)
-    new = make_prediction(file)
-    response_1 = rfc_1.predict(new.drop(columns=["date", "close"]))
 
-    print(response_1, new["date"], " ", new["close"])
-    coef_1 = float(response_1)
-    if (
-        coef_1 > 0
-        and slope < -0.01
-        and (
-            file["volume"][len(file) - 1] > vol_prom * a
-            or file["volume"][len(file) - 2] > vol_prom * a
-        )
-        and file["rsi"][len(file) - 1] < rsi_compare
-    ):
-        coef = coef_1
-        t = f'{nam} \n BUY: {float(new["close"])} \n TAKEPROFIT: {float(new["close"])*(1+coef)} \n STOPLOSS: {float(new["close"])*(1-.005)} \n cero: {float(new["close"])*(1+0.0015)} \n {datetime.datetime.now()} '
-        print(t)
-        bot.send_message(chat_id=user_id, text=t)
-    else:
-        t = f"{nam}  \n don't buy, wait {interval}"
-        print(t)
-    time.sleep(inter_)
+        Y = [file["close"][t] for t in range(len(file) - rows, len(file))]
+
+    # The slope of the candels is calculated
+
+        slope, intercept, r_value, p_value_2, std_err = linregress(X, Y)
+
+    # generate a list with every volume value of the rows
+
+        vol = [file["volume"][x] for x in range(len(file) - rows, len(file))]
+
+    # calculate the mean value of the volume list
+
+        vol_prom = np.mean(vol)
+        new = make_prediction(file)
+        response_1 = rfc_1.predict(new.drop(columns=["date", "close"]))
+
+        print(response_1, new["date"], " ", new["close"])
+        coef_1 = float(response_1)
+        if (
+            coef_1 > 0
+            and slope < -0.01
+            and (
+                file["volume"][len(file) - 1] > vol_prom * a
+                or file["volume"][len(file) - 2] > vol_prom * a
+            )
+            and file["rsi"][len(file) - 1] < rsi_compare
+        ):
+            coef = coef_1
+            t = f'{nam} \n BUY: {float(new["close"])} \n TAKEPROFIT: {float(new["close"])*(1+coef)} \n STOPLOSS: {float(new["close"])*(1-.005)} \n cero: {float(new["close"])*(1+0.0015)} \n {datetime.datetime.now()} '
+            print(t)
+            bot.send_message(chat_id=user_id, text=t)
+        else:
+            t = f"{nam}  \n don't buy, wait {interval}"
+            print(t)
+        time.sleep(inter_)
 
 ######################################################################################################
 
@@ -203,5 +241,6 @@ def make_prediction(file):
     new.loc[1] = row
     return new
 
+main()
 
 
