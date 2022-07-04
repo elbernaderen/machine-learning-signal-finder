@@ -19,37 +19,65 @@ in_ = int(
         "Enter the number of candels (Y) considered in the model for the prediction: \n"
     )
 )
+# Number of candels to consider for the prediction
+
 rows = int(
     input(
         "Enter the number of candels (X) considered in the model for the prediction:: \n"
     )
 )
+
+# The relative strength index (RSI) is a momentum indicator
+# used in technical analysis that measures the magnitude 
+# of recent price changes to evaluate overbought or oversold 
+# conditions in the price of a stock or other asset 
+
+rsi_compare = int(
+    input("Enter the rsi value to consider (30 recomended): \n")
+)
+
+# The number of the previous candlesticks (periods) is the main setting 
+# of the indicator called a period. By default Period = 14; this is the value the author used.
+
 periods = int(
     input("Enter the amount of periods for rsi calculation (14 recomended): \n")
 )
+
+# a will allow us know if the volume of the candels is "a" times bigger than the mean volume
+# of the previus candels
+
 a = int(
     input("Enter how much to increase the mean volume value: \n")
     )
-rsi_ = int(
-    input("Enter the rsi value to consider (30 recomended): \n")
-    )
-nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
+
+# name of the Crypto-currency to analyze
+
+name = input("Enter the name of the symbol, ex BTCUSDT:\n")
+
+# interval is the interval to consider, ex: 1d or 1h or 30m or 15m or 5m for each candlestick
+
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+
+# slope_ will be used to compare the candels slope (if it is negative is falling
+#  and if it is positive is rising) 
+
 slope_ = int(
     input("Enter the slope to take in reference, (0 recomended):\n")
     )
+
+# p represents all the candles involved
+
 p = rows + in_
-# in_ is the number of candles we consider to know if the price rises or fall
+
 
 ######################################################################################################
 
 ######################################################################################################
 # MAIN PROGRAM 
- # file is a DataFrame created since the csv file with the historical Crypto-currency data
 
- # file is a DataFrame created since the csv file with the historical Crypto-currency data
+# file is a DataFrame created since the csv file with the historical Crypto-currency data
 
-file = pd.read_csv(f"prueba/{nam}_30m__backtest.csv")
+file = pd.read_csv(f"backtest/{name}_30m__backtest.csv")
 
 # rsi is a list with each candel RSI value
 
@@ -73,7 +101,8 @@ file.drop(index=file.index[:95], axis=0, inplace=True)
 
 file = file.reset_index()
 
-# Once we have the DataFrame with the technical indicators, we call backtest function
+# Once we have the DataFrame with the technical indicators, we call backtest_prepare function
+# that generates
 
 df_actual = backtest_prepare(file)
 
@@ -98,7 +127,7 @@ for na_sav in range(1, len(sys.argv)):
 
 st = str(datetime.datetime.now())
 
-df_down.to_excel(f"data/{nam}_amp_{st[0:13]}.xlsx", sheet_name="NUMBERS")
+df_down.to_excel(f"data/{name}_amp_{st[0:13]}.xlsx", sheet_name="NUMBERS")
 
 ######################################################################################################
 
@@ -121,7 +150,13 @@ def backtest_prepare(file):
     new = pd.DataFrame(columns=index_)
     X = [x for x in range(0, p - in_)]
     for i in range(p, len(file)):
+
+        # Generate the y-axis list to analize the slope with linear regression from cero to rows candels close values
+
         Y = [file["close"][t] for t in range(i - p, i - in_)]
+
+        # The slope of the candels is calculated
+
         slope, intercept, r_value, p_value_2, std_err = linregress(X, Y)
         row = list()
         vale = 0
@@ -135,7 +170,7 @@ def backtest_prepare(file):
                 or file["volume"][K - 1] > vol_prom * a
             )
             and 
-            (file["rsi"][i - in_] < rsi_ or file["rsi"][i - in_ - 1] < rsi_)
+            (file["rsi"][i - in_] < rsi_ or file["rsi"][i - in_ - 1] < rsi_compare)
             ):
             vale = 1
         for t in range(in_, p + 1):

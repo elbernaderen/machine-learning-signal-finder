@@ -59,7 +59,7 @@ p = rows + in_
 
 slope_ = float(input("Enter the slope to take in reference, (0 recomended):\n"))
 
-# temp is the interval to consider, ex: 1d or 1h or 30m or 15m or 5m for each candlestick
+# interval is the interval to consider, ex: 1d or 1h or 30m or 15m or 5m for each candlestick
 
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
 

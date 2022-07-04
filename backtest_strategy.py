@@ -46,7 +46,13 @@ a = int(
 
 name = input("Enter the name of the symbol, ex BTCUSDT:\n")
 
+# temp is the interval to consider, ex: 1d or 1h or 30m or 15m or 5m for each candlestick
+
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
+
+# slope_ will be used to compare the candels slope (if it is negative is falling
+#  and if it is positive is rising) 
+
 slope_ = int(
     input("Enter the slope to take in reference, (0 recomended):\n"
     )
