@@ -57,7 +57,8 @@ slope_ = int(
     )
 )
 
-# Interval must be seconds, so here we convert hour, day or minutes in seconds
+# The time interval must be seconds, so here we convert hour, day or minutes in seconds
+
 if "d" in interval:
     inter_ = 3600 * 24
     hours = 24 * 150
@@ -65,9 +66,13 @@ elif "h" in interval:
     inter_ = 3600
     hours = 150
 else:
-    interval_ = 60 * int(interval.replace("m", ""))
+    inter_ = 60 * int(interval.replace("m", ""))
     hours = 150
-    
+
+# interval_ will save the interval value, and inter_ will be changing in the while loop.
+
+interval_ = inter_  
+
 ######################################################################################################
 
 ######################################################################################################
@@ -90,28 +95,43 @@ while True:
     # according to the interval choosed
 
     inter_ = interval_
+
+    # To make an analysis and determine if we have to buy or just wait, 
+    # we need to download several seconds before the last candle, 
+    # so the variable tt will be the start date of the data to download
+
+
     hour = datetime.timedelta(hours = hours)
     hour_ = datetime.datetime.utcnow()
     tt = hour_ - hour
+    
+    # If at the moment of download the historical data, 
+    # the internet is gone, the program will fail. 
+    # So we add an Exception 
+
     try:
         kk = store_ohlcv(
             symbol=nam, 
             interval = interval,
             start_date = tt, 
-            name = "_mensajero"
+            name = "messenger"
         )
     except ConnectionError:
+        # If the internet is gone, we'll wait 60 seconds, and'll try again
+
         time.sleep(60)
         inter_ -= 60
         print("check your internet connection\n")
         kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="mensajero"
+            symbol=nam, interval=interval, start_date=tt, name="messenger"
         )
+
     # wait to download the csv file
+
     time.sleep(30)
     inter_ -= 30
 
-    file = pd.read_csv(f"mensajero/{nam}_{interval}_mensajero.csv")
+    file = pd.read_csv(f"messenger/{nam}_{interval}_messenger.csv")
     rsi = RSI(file["close"], periods)
     file["rsi"] = rsi
     file = macd(file)
