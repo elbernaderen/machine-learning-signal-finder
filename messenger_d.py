@@ -13,6 +13,11 @@ import numpy as np
 from scipy.stats import linregress
 import yaml
 
+######################################################################################################
+# PROGRAM DEFINITIONS
+
+# Telegram user id and api_key
+
 config = yaml.load(open("ignore/telconfig.yml"), Loader=yaml.FullLoader)
 
 api_key = config["api_key"]
@@ -20,9 +25,21 @@ user_id = config["user_id"]
 
 bot = telegram.Bot(token=api_key)
 
+# Number of candels to consider for the prediction
+
 rows = int(
     input(
         "Enter the number of candels (X) considered in the model for the prediction: \n"
+    )
+)
+
+# The relative strength index (RSI) is a momentum indicator
+# used in technical analysis that measures the magnitude 
+# of recent price changes to evaluate overbought or oversold 
+# conditions in the price of a stock or other asset 
+
+rsi_compare = int(
+    input("Enter the rsi value to consider (30 recomended): \n"
     )
 )
 periods = int(
@@ -32,10 +49,7 @@ a = int(
     input("Enter how much to increase the mean volume value: \n"
     )
 )
-rsi_ = int(
-    input("Enter the rsi value to consider (30 recomended): \n"
-    )
-)
+
 nam = input("Enter the name of the symbol, ex BTCUSDT:\n")
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
 slope_ = int(
@@ -43,7 +57,7 @@ slope_ = int(
     )
 )
 
-
+# Interval must be seconds, so here we convert hour, day or minutes in seconds
 if "d" in interval:
     inter_ = 3600 * 24
     hours = 24 * 150
@@ -53,52 +67,38 @@ elif "h" in interval:
 else:
     interval_ = 60 * int(interval.replace("m", ""))
     hours = 150
+    
+######################################################################################################
 
+######################################################################################################
+# MAIN PROGRAM
 
-def make_prediction(file):
-    # this function generates a row with the candels choosen, so the predictor can make the prediction
-    index_ = name_col(rows)
-    index_.append("date")
-    index_.append("close")
-    new = pd.DataFrame(columns=index_)
-    i = len(file) - 1
-    row = list()
-    for t in range(rows + 1):
-        # volume relation normalized with the first element of the row
-        row.append(file["volume"][i - t] / float(file["volume"][i - rows]))
-        # value amplitude relation 1
-        row.append(
-            (file["open"][i - t] - file["close"][i - rows]) / file["low"][i - rows]
-        )
-        # value amplitude relation 2
-        row.append(
-            (file["close"][i - t] - file["open"][i - rows]) / file["high"][i - rows]
-        )
-        # value amplitude relation 3
-        row.append((file["high"][i - t]) / (file["low"][i - rows]))
-        row.append(file["rsi"][i - t])
-        row.append(file["macd"][i - t])
-        row.append(file["macd_h"][i - t])
-        row.append(file["macd_s"][i - t])
-    row.extend([file["date"][i], file["close"][i]])
-    new.loc[1] = row
-    return new
-
+# First we open the .sav file with the model generated with amplitudes
+#  which name was entered as an argument, using pickle
 
 exc_1 = str(sys.argv[1])
-
 filename_1 = f"{exc_1}.sav"
 rfc_1 = pickle.load(open(filename_1, "rb"))
-# Generate a list to analize the slope with linear regression from cero to rows
+
+# Generate the  x-axis list to analize the slope with linear regression from cero to rows
+
 X = [x for x in range(0, rows)]
+
 while True:
+    
+    # The signal finder is activated, and it will keep working
+    # according to the interval choosed
+
     inter_ = interval_
-    hour = datetime.timedelta(hours=hours)
+    hour = datetime.timedelta(hours = hours)
     hour_ = datetime.datetime.utcnow()
     tt = hour_ - hour
     try:
         kk = store_ohlcv(
-            symbol=nam, interval=interval, start_date=tt, name="_mensajero"
+            symbol=nam, 
+            interval = interval,
+            start_date = tt, 
+            name = "_mensajero"
         )
     except ConnectionError:
         time.sleep(60)
@@ -138,7 +138,7 @@ while True:
             file["volume"][len(file) - 1] > vol_prom * a
             or file["volume"][len(file) - 2] > vol_prom * a
         )
-        and file["rsi"][len(file) - 1] < rsi_
+        and file["rsi"][len(file) - 1] < rsi_compare
     ):
         coef = coef_1
         t = f'{nam} \n BUY: {float(new["close"])} \n TAKEPROFIT: {float(new["close"])*(1+coef)} \n STOPLOSS: {float(new["close"])*(1-.005)} \n cero: {float(new["close"])*(1+0.0015)} \n {datetime.datetime.now()} '
@@ -148,3 +148,40 @@ while True:
         t = f"{nam}  \n don't buy, wait {interval}"
         print(t)
     time.sleep(inter_)
+
+######################################################################################################
+
+######################################################################################################
+# FUNCTIONS
+    
+def make_prediction(file):
+    # this function generates a row with the candels choosen, so the predictor can make the prediction
+    index_ = name_col(rows)
+    index_.append("date")
+    index_.append("close")
+    new = pd.DataFrame(columns=index_)
+    i = len(file) - 1
+    row = list()
+    for t in range(rows + 1):
+        # volume relation normalized with the first element of the row
+        row.append(file["volume"][i - t] / float(file["volume"][i - rows]))
+        # value amplitude relation 1
+        row.append(
+            (file["open"][i - t] - file["close"][i - rows]) / file["low"][i - rows]
+        )
+        # value amplitude relation 2
+        row.append(
+            (file["close"][i - t] - file["open"][i - rows]) / file["high"][i - rows]
+        )
+        # value amplitude relation 3
+        row.append((file["high"][i - t]) / (file["low"][i - rows]))
+        row.append(file["rsi"][i - t])
+        row.append(file["macd"][i - t])
+        row.append(file["macd_h"][i - t])
+        row.append(file["macd_s"][i - t])
+    row.extend([file["date"][i], file["close"][i]])
+    new.loc[1] = row
+    return new
+
+
+
