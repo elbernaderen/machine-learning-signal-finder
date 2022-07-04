@@ -10,8 +10,7 @@ With this script, we run through each Crypto-currency Historical Data like BTCUS
 It also include indicators that express:
 * amplitude of high and low values 
 * open and closure values 
-* normalized volume 
-* open, close, high and low normalized values (added as a comment). 
+* normalized volume . 
 
 With all those indicators, we try to find a pattern in prices movement that allow us to know if the prices are going to rise or fall. Then, with a determinated number of candels that come next of the last one of the generated row, we know if the price have risen or fallen. 
 
@@ -298,7 +297,7 @@ py call_bina.py ETHUSDT base 2019 1 1
 ```
 To download a Crypto-currency Historical Data for [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy) and a Crypto-currency, for example  BTCUSDT since a determinated date, must be called the program in console as continue:
 ```bash
-py call_bina.py BTCUSDT prueba 2022 3 5
+py call_bina.py BTCUSDT backtest 2022 3 5
 ```
 # References:
 * [Scraping Crypto-currency Historical Data from Binance using python](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7)
