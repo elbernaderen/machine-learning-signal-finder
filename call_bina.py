@@ -9,7 +9,7 @@ if len(sys.argv) > 0:
     year = int(sys.argv[3])
     month = int(sys.argv[4])
     day = int(sys.argv[5])
-print(dia)
+    
 start_date = datetime.datetime(year, month, day)
 kk = store_ohlcv(symbol = name,
                 interval = "30m",
