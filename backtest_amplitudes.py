@@ -172,7 +172,7 @@ def backtest_prepare(file):
                 or file["volume"][K - 1] > vol_prom * a
             )
             and 
-            (file["rsi"][i - in_] < rsi_ or file["rsi"][i - in_ - 1] < rsi_compare)
+            (file["rsi"][i - in_] < rsi_compare or file["rsi"][i - in_ - 1] < rsi_compare)
             ):
             vale = 1
         for t in range(in_, p + 1):
