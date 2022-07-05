@@ -76,10 +76,9 @@ a = int(input("Enter how much to increase the mean volume value: \n"))
 
 names = ["LISTA:"]
 
-# counter is used in the main program to count the number of historical Crypto-currency data
-# added as argument
 
-count = 0
+
+
 
 ######################################################################################################
 
@@ -87,38 +86,44 @@ count = 0
 # MAIN PROGRAM 
 
 # This for will read each historical Crypto-currency data added as an argument
+def main():
 
-for nam in range(1, len(sys.argv)):
+    # counter is used in the main program to count the number of historical Crypto-currency data
+    # added as argument
 
-    # file is a DataFrame created since the csv file with the historical Crypto-currency data
+    count = 0
 
-    file = pd.read_csv(f"base/{str(sys.argv[nam])}_{interval}_base.csv")
+    for nam in range(1, len(sys.argv)):
 
-    # rsi is a list with each candel RSI value
+        # file is a DataFrame created since the csv file with the historical Crypto-currency data
 
-    rsi = RSI(file["close"], periods)
+        file = pd.read_csv(f"base/{str(sys.argv[nam])}_{interval}_base.csv")
 
-    # Here the RSI list is added to the dataframe file
+        # rsi is a list with each candel RSI value
 
-    file["rsi"] = rsi
+        rsi = RSI(file["close"], periods)
 
-    # The macd function receives a DataFrame and add to it the
-    # macd, macd_h and macd_s columns
+        # Here the RSI list is added to the dataframe file
 
-    file = macd(file)
+        file["rsi"] = rsi
 
-    # Here we delete the first 95 columns because the firts RSI values are 
-    # erroneous
+        # The macd function receives a DataFrame and add to it the
+        # macd, macd_h and macd_s columns
 
-    file.drop(index = file.index[:95], axis=0, inplace=True)
+        file = macd(file)
 
-    # Reset the index after the first 95 rows are been deleted
+        # Here we delete the first 95 columns because the firts RSI values are 
+        # erroneous
 
-    file = file.reset_index()
+        file.drop(index = file.index[:95], axis=0, inplace=True)
 
-    # if it is the first historical Crypto-currency data, then:
+        # Reset the index after the first 95 rows are been deleted
 
-    if count == 0:
+        file = file.reset_index()
+    
+        # if it is the first historical Crypto-currency data, then:
+
+        if count == 0:
 
         # The funtion that generates the rows with the sequence of candels
         # named verify is called.
@@ -127,82 +132,82 @@ for nam in range(1, len(sys.argv)):
         #  technical indicators (rsi,macd, etc), other parameters like slope and finaly if the consecutives candels (in_)
         # have shown an increase or not (buy_decide) of its value in a the determinated percent (B) 
 
-        v = verify(file)
+            v = verify(file)
 
-        count += 1
+            count += 1
 
-    # if it's not the first historical Crypto-currency data, then:
+            # if it's not the first historical Crypto-currency data, then:
 
-    else:
+        else:
 
-        k = verify(file)
+            k = verify(file)
 
-        # After we call verify, we append the new DataFrame of the new historical Crypto-currency data
-        # to the previusly generated.
+            # After we call verify, we append the new DataFrame of the new historical Crypto-currency data
+            # to the previusly generated.
 
-        v = pd.concat([v, k], ignore_index=True)
+            v = pd.concat([v, k], ignore_index=True)
 
-    # add the name of the historical Crypto-currency in the names list
+        # add the name of the historical Crypto-currency in the names list
 
-    names.append(str(sys.argv[nam]))
+        names.append(str(sys.argv[nam]))
 
-y = v.buy
+    y = v.buy
 
-# columns to use to run the rfc
+    # columns to use to run the rfc
 
-features = name_col(rows)
+    features = name_col(rows)
 
-X = v[features]
-# 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=10
-)
+    X = v[features]
+ 
+    X_train, X_test, y_train, y_test = train_test_split(
+                                    X, y, test_size=0.2, random_state=10
+                                    )
 
-rfc = RandomForestClassifier(n_estimators=2000)
+    rfc = RandomForestClassifier(n_estimators=2000)
 
-rfc.fit(X_train, y_train)
+    rfc.fit(X_train, y_train)
 
-predictions = rfc.predict(X_test)
+    predictions = rfc.predict(X_test)
 
-# To assign a name of the predictor model file we use some variables and the date and hour when it was created
-st = str(datetime.datetime.now())
+    # To assign a name of the predictor model file we use some variables and the date and hour when it was created
+    st = str(datetime.datetime.now())
 
-st = st.replace(" ", "_")
+    st = st.replace(" ", "_")
 
-st = st.replace(":", "_")
+    st = st.replace(":", "_")
 
-filename_ = f"rows{rows}_periods_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
+    filename_ = f"rows{rows}_periods_{periods}_in_{in_}_{B}_{st[0:16]}.sav"
 
-# pickle creates a .sav file with the rfc model so we can use it with the backtesting or the messenger,
-# and names it as filename_
+    # pickle creates a .sav file with the rfc model so we can use it with the backtesting or the messenger,
+    # and names it as filename_
 
-pickle.dump(rfc, open(filename_, "wb"))
-
-######################################################################################################
+    pickle.dump(rfc, open(filename_, "wb"))
 
 ######################################################################################################
-# RESULTS
-# name of the .sav file
 
-print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
+######################################################################################################
+    # RESULTS
+    # name of the .sav file
 
-# name is the list of the historical Crypto-currency data used
+    print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
 
-print(names)
+    # name is the list of the historical Crypto-currency data used
 
-# The classification report allows us to compare the precission, aquracy of different variables 
-# used like B, in_, a also the different historical Crypto-currency data.
+    print(names)
 
-print(classification_report(y_test, predictions))
+    # The classification report allows us to compare the precission, aquracy of different variables 
+    # used like B, in_, a also the different historical Crypto-currency data.
 
-# The next information is useful to know which variables were used to obtain 
-# what the classification report indicates
+    print(classification_report(y_test, predictions))
 
-print(f"periods rsi: {periods}")
-print(f"Y candels: {in_}")
-print(f"Amount that increased the volume: {a}")
-print(f"rows: {rows}")
-print(f"Candels used to calculate volume: {vol_p}")
+    # The next information is useful to know which variables were used to obtain 
+    # what the classification report indicates
+
+    print(f"periods rsi: {periods}")
+    print(f"Y candels: {in_}")
+    print(f"Amount that increased the volume: {a}")
+    print(f"rows: {rows}")
+    print(f"Candels used to calculate volume: {vol_p}")
 
 ######################################################################################################
 
@@ -294,4 +299,5 @@ def verify(file):
         k = k.dropna()
     return k
 
+main()
 ######################################################################################################
