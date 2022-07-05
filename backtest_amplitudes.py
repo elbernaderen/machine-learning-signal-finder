@@ -75,59 +75,61 @@ p = rows + in_
 ######################################################################################################
 # MAIN PROGRAM 
 
-# file is a DataFrame created since the csv file with the historical Crypto-currency data
+def main():
 
-file = pd.read_csv(f"backtest/{name}_30m__backtest.csv")
+    # file is a DataFrame created since the csv file with the historical Crypto-currency data
 
-# rsi is a list with each candel RSI value
+    file = pd.read_csv(f"backtest/{name}_30m_backtest.csv")
 
-rsi = RSI(file["close"], periods)
+    # rsi is a list with each candel RSI value
 
-# Here the RSI list is added to the dataframe file
+    rsi = RSI(file["close"], periods)
 
-file["rsi"] = rsi
+    # Here the RSI list is added to the dataframe file
 
-# The macd function receives a DataFrame and add to it the
-# macd, macd_h and macd_s columns
+    file["rsi"] = rsi
 
-file = macd(file)
+    # The macd function receives a DataFrame and add to it the
+    # macd, macd_h and macd_s columns
 
-# Here we delete the first 95 columns because the firts RSI values are 
-# erroneous
+    file = macd(file)
 
-file.drop(index=file.index[:95], axis=0, inplace=True)
+    # Here we delete the first 95 columns because the firts RSI values are 
+    # erroneous
 
-# Reset the index after the first 95 rows are been deleted
+    file.drop(index=file.index[:95], axis=0, inplace=True)
 
-file = file.reset_index()
+    # Reset the index after the first 95 rows are been deleted
 
-# Once we have the DataFrame with the technical indicators, we call backtest_prepare function
-# that generates
+    file = file.reset_index()
 
-df_actual = backtest_prepare(file)
+    # Once we have the DataFrame with the technical indicators, we call backtest_prepare function
+    # that generates
+
+    df_actual = backtest_prepare(file)
 
 
-columns_down = ["date", "close"]
-columns_down.extend(name_col_2(in_))
-columns_down.extend(["vale"])
+    columns_down = ["date", "close"]
+    columns_down.extend(name_col_2(in_))
+    columns_down.extend(["vale"])
 
-df_down = df_actual[columns_down]
+    df_down = df_actual[columns_down]
 
-# if are there more than one model of predictor
+    # if are there more than one model of predictor
 
-for na_sav in range(1, len(sys.argv)):
+    for na_sav in range(1, len(sys.argv)):
 
-    print(str(sys.argv[na_sav]))
-    exc = str(sys.argv[na_sav])
-    filename = f"{exc}.sav"
-    rfc = pickle.load(open(filename, "rb"))
-    df_down[f"{exc}"] = df_actual.apply(
-        lambda row: pred(row, df_actual.columns, rfc), axis=1
-    )
+        print(str(sys.argv[na_sav]))
+        exc = str(sys.argv[na_sav])
+        filename = f"{exc}.sav"
+        rfc = pickle.load(open(filename, "rb"))
+        df_down[f"{exc}"] = df_actual.apply(
+            lambda row: pred(row, df_actual.columns, rfc), axis=1
+        )
 
-st = str(datetime.datetime.now())
+    st = str(datetime.datetime.now())
 
-df_down.to_excel(f"data/{name}_amp_{st[0:13]}.xlsx", sheet_name="NUMBERS")
+    df_down.to_excel(f"data/{name}_amp_{st[0:13]}.xlsx", sheet_name="NUMBERS")
 
 ######################################################################################################
 
@@ -197,4 +199,5 @@ def backtest_prepare(file):
         new.loc[i] = row
     return new
 
+main()
 ######################################################################################################
