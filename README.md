@@ -10,8 +10,7 @@ With this script, we run through each Crypto-currency Historical Data like BTCUS
 It also include indicators that express:
 * amplitude of high and low values 
 * open and closure values 
-* normalized volume 
-* open, close, high and low normalized values (added as a comment). 
+* normalized volume . 
 
 With all those indicators, we try to find a pattern in prices movement that allow us to know if the prices are going to rise or fall. Then, with a determinated number of candels that come next of the last one of the generated row, we know if the price have risen or fallen. 
 
@@ -118,7 +117,7 @@ Once the program has finished, a .xlsx spreadsheet will be created with a column
 
 
 # backtest_amplitudes.py
-With this program,the user can make a backtest for one or more models created with [amplitudes](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy) with a determinated hCrypto-currency Historical Data.
+With this program,the user can make a backtest for one or more models created with [amplitudes](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy) with a determinated Crypto-currency Historical Data.
 ## Description
 With a Crypto-currency Historical Data, that has been download with **call_bina.py**, this program creates an .xlsx spreadsheet where is the data and the decision (buy or do nothing) of one or more models created with [amplitudes](https://github.com/elbernaderen/machine-learning-signal-finder/blob/main/README.md#amplitudespy), where these models could be created with different criteria, like the percentage that have to rise the price to consider it as a success  RSI, volume, etc.
 Using the .sav model/s files, the program predict if the price will increase it's value to achieve the increment predict, and this will be added in a column with the model name.
@@ -225,7 +224,7 @@ The slope of the close value of the candels indicates if the market (in this seq
 # messenger_h_rsi.py
 ## Description
 Here we have a signal bot trading, that using [telegram](https://python-telegram-bot.readthedocs.io/en/stable/) sends signals obtained 
-from some technical analysis, taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels. If the strategy set fits with the sequence obtained with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library, 
+from some technical analysis, taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels. If the strategy set fits with the sequence obtained with the [Binance](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7) library.
 ## Must install
 [Pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists. 
 
@@ -287,7 +286,7 @@ Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data
 To use it, we need to have a Binance account. If you don't have one, can create a account following [this](https://www.binance.com/es/activity/referral-entry?fromActivityPage=true&ref=LIMIT_MYXYAGGF) and by doing that will be my refered and also colaborate with this project. Once that you have an account, you need to generate an API, as [follows](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7). Then, have to set the API_key and the API_ secret in the config yml file located in the ignore folder.
 
 # call_bina.py
-To download the Crypto-currency Historical Data to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
+Interface to download the Crypto-currency Historical Data to use them as base for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) or to make a backtest with [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy).
 ## Description
 This script calls the function **store_ohlcv** from [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy), that is used to download the Crypto-currency Historical Data, setting the name of the Crypto-currency in capital letters, name of the file that will be created, year, month and day since when take in count.
 ## Usage:
@@ -298,7 +297,7 @@ py call_bina.py ETHUSDT base 2019 1 1
 ```
 To download a Crypto-currency Historical Data for [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy) and a Crypto-currency, for example  BTCUSDT since a determinated date, must be called the program in console as continue:
 ```bash
-py call_bina.py BTCUSDT prueba 2022 3 5
+py call_bina.py BTCUSDT backtest 2022 3 5
 ```
 # References:
 * [Scraping Crypto-currency Historical Data from Binance using python](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7)
