@@ -9,10 +9,11 @@ if len(sys.argv) > 0:
     year = int(sys.argv[3])
     month = int(sys.argv[4])
     day = int(sys.argv[5])
-    
+    interval = sys.argv[6]
+
 start_date = datetime.datetime(year, month, day)
 kk = store_ohlcv(symbol = name,
-                interval = "30m",
+                interval = interval,
                 start_date = start_date,
                  name = file_name)
 print(name)
