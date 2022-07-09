@@ -226,7 +226,7 @@ def verify(file):
 
     # Generate the  x-axis list to analize the slope with linear regression from cero to rows
 
-    X = [x for x in range(0, p - in_)]
+    X = [x for x in range(0, rows)]
 
     for i in range(p + vol_p, len(file.index)):
 
@@ -261,7 +261,7 @@ def verify(file):
         ):
             # hi is the list with variaton of the candles we consider to know if the price rises or fall
 
-            high_candel = [(file["high"][i - t] - file["close"][i - in_]) / file["close"][i - in_] for t in range(in_ + 1)]
+            high_candel = [(file["high"][i - t] - file["close"][i - in_]) / file["close"][i - in_] for t in range(in_ )]
 
             # If the candles that come after to the first candles considered (rows) 
             # are bigger than the B established value, buy decide will be B, otherwise it will be 0
