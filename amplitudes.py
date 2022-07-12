@@ -245,7 +245,7 @@ def verify(file):
 
         # Mean volume calculate
 
-        vol = [file["volume"][i - x] for x in range(in_, p + 1 + vol_p)]
+        vol = [file["volume"][i - x] for x in range(in_, in_ + 1 + vol_p)]
 
         vol_prom = np.mean(vol)
 
