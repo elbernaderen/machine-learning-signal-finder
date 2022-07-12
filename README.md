@@ -74,6 +74,10 @@ Enter how many candels consider to calculate the volume mean:
 ```
 To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants, ex: 300.
 Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
+
+![tempsnip](https://user-images.githubusercontent.com/65098903/178494020-f060336d-b744-496c-8b5f-47494e1c25ff.png)
+
+
 # backtest_strategy.py
 This program, as it's name says is a backtest for a strategy with a determinated Crypto-currency Historical Data.
 ## Description
