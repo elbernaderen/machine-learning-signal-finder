@@ -1,6 +1,4 @@
 
-<a aria-label="Ir al inicio" class="header_logo__d4jIK" href="https://cafecito.app/bderendinger"><img class="header_logoDesktop__1UHgj" src="https://cdn.cafecito.app/imgs/cafecito_logo.svg" width="43px" height="38px" alt=""><span>Buy me a coffee</span></a>
-
 # amplitudes.py
 Fit a crypto trade predictor model with a determined sequence of candels from different Cryptocurrency.
 ## Description
