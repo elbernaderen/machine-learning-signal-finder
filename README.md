@@ -1,3 +1,4 @@
+
 # amplitudes.py
 Fit a crypto trade predictor model with a determined sequence of candels from different Cryptocurrency.
 ## Description
@@ -75,7 +76,9 @@ Enter how many candels consider to calculate the volume mean:
 To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants, ex: 300.
 Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
 
-![tempsnip](https://user-images.githubusercontent.com/65098903/178494020-f060336d-b744-496c-8b5f-47494e1c25ff.png)
+
+![tempsnip](https://user-images.githubusercontent.com/65098903/178709836-f52c5451-a3dc-410a-9404-ed0b931e587e.png)
+
 
 
 # backtest_strategy.py
