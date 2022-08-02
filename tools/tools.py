@@ -1,12 +1,17 @@
 import numpy as np
+from datetime import datetime
+import pandas as pd
+
 
 ######################################################################################################
 # name generator
 
-def name_col(rows):
+def name_col(rows, k = 2):
+
     ind_row = rows + 1
     index_ = list()
     for cin in range(ind_row):
+
         index_.append(f"volume_{cin}")
         index_.append(f"mart_{cin}")
         index_.append(f"mart_inv_{cin}")
@@ -15,18 +20,59 @@ def name_col(rows):
         index_.append(f"macd_{cin}")
         index_.append(f"macd_h{cin}")
         index_.append(f"macd_s{cin}")
-    return index_
+
+    if k == 2:
+
+        return index_
+
+    if k == 1:
+
+        index_.append("date")
+        index_.append("close")
+        index_.append("slope_prev")
+        index_.append("slope_prev_short")
+        index_.append("mean_rel_15_30")
+        index_.append("mean_rel_30_60")
+        index_.append("mean_rel_60_100")
+        index_.append("buy")
+
+        return index_
+
+    if k == 3:
+        index_.append("slope_prev")
+        index_.append("slope_prev_short")
+        index_.append("mean_rel_15_30")
+        index_.append("mean_rel_30_60")
+        index_.append("mean_rel_60_100")
+
+        return index_
+
+    if k == 4:
+        index_.append("date")
+        index_.append("slope_prev")
+        index_.append("slope_prev_short")
+        index_.append("mean_rel_15_30")
+        index_.append("mean_rel_30_60")
+        index_.append("mean_rel_60_100")
+    
+        return index_
 ######################################################################################################
+
 
 ######################################################################################################
 def RSI(t, periods=10):
+
 # extracted from https://programmerclick.com/article/34731200625/
     length = len(t)
     rsies = [np.nan]*length
+    
          # La longitud de los datos no excede el período y no se puede calcular;
+
     if length <= periods:
         return rsies
+
          #Utilizado para cálculos rápidos;
+
     up_avg = 0
     down_avg = 0
  
@@ -112,3 +158,63 @@ def name_col_2(in_):
     return index_
 
 ######################################################################################################
+
+######################################################################################################
+
+# hour and day converter through the date
+
+def weekday_convert(row):
+    date_time_obj = datetime. strptime(row, '%Y-%m-%d %H:%M:%S')
+    return date_time_obj.weekday()
+
+def hour_convert(row):
+    date_time_obj = datetime. strptime(row, '%Y-%m-%d %H:%M:%S')
+    return date_time_obj.hour
+
+######################################################################################################
+
+def cut_labels(df,columns_cut_dummi):
+
+    list_dummies = list()
+
+    for i in columns_cut_dummi:
+
+        sep = (df[i].max() - df[i].min()) / 11
+
+        list_dummies.append(f"{i}_cut")
+
+        df[f"{i}_cut"] = pd.cut(x=df[i],
+                                bins=[df[i].min() + k * sep for k in range(0,12) ],
+                                labels=[-5,-4,-3,-2,-1,0, 1, 2, 3,4,5]
+                                )
+
+    list_dummies.extend(["hour","day"])
+
+    return df,list_dummies
+
+######################################################################################################
+
+def edit_df(df, rows,prop = 1):
+
+    # Take off the values outliers, or that ones that aren't frequent
+    if prop == 1:
+
+        df = df[ df["close"] < 0.1]
+
+        df = df[ df["close"] > -0.1]
+
+    # columns to use to run the rfc
+
+    features = name_col(rows, 3)
+
+    # cut_labels make a continuos variable to a categorical one
+
+    df,list_dummies= cut_labels(df,features)
+
+    # add the day and hour columns
+
+    df["day"] = df["date"].apply(weekday_convert)
+
+    df["hour"] = df["date"].apply(hour_convert)
+
+    return df,list_dummies
