@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from tools.tools import name_col, RSI, macd
+from tools.tools import name_col, RSI, macd, edit_df
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
@@ -42,9 +42,6 @@ rows = int(
 # used in technical analysis that measures the magnitude 
 # of recent price changes to evaluate overbought or oversold 
 # conditions in the price of a stock or other asset 
-
-rsi_compare = int(input("Enter the rsi value to consider (30 recomended): \n"))
-
 # The number of the previous candlesticks (periods) is the main setting 
 # of the indicator called a period. By default Period = 14; this is the value the author used.
 
@@ -57,8 +54,6 @@ p = rows + in_
 # slope_ will be used to compare the candels slope (if it is negative is falling
 #  and if it is positive is rising) 
 
-slope_ = float(input("Enter the slope to take in reference, (0 recomended):\n"))
-
 # interval is the interval to consider, ex: 1d or 1h or 30m or 15m or 5m for each candlestick
 
 interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m \n")
@@ -66,11 +61,6 @@ interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 
 # vol_p is the number that will be used to calculate the volume mean
 
 vol_p = int(input("Enter how many candels consider to calculate the volume mean: \n"))
-
-# a will allow us know if the volume of the candels is "a" times bigger than the mean volume
-# of the previus candels
-
-a = int(input("Enter how much to increase the mean volume value: \n"))
 
 # List that'll be filled with the different Crypto-currency used
 
@@ -132,7 +122,7 @@ def main():
         #  technical indicators (rsi,macd, etc), other parameters like slope and finaly if the consecutives candels (in_)
         # have shown an increase or not (buy_decide) of its value in a the determinated percent (B) 
 
-            v = verify(file)
+            df = verify(file)
 
             count += 1
 
@@ -140,30 +130,36 @@ def main():
 
         else:
 
-            k = verify(file)
+            df_ = verify(file)
 
             # After we call verify, we append the new DataFrame of the new historical Crypto-currency data
             # to the previusly generated.
 
-            v = pd.concat([v, k], ignore_index=True)
+            df = pd.concat([df, df_], ignore_index = True)
 
         # add the name of the historical Crypto-currency in the names list
 
-        names.append(str(sys.argv[nam]))
+        names.append( str( sys.argv[nam]))
 
-    y = v.buy
+    # Make a last edition to the DataFrame
 
-    # columns to use to run the rfc
+    df,list_dummies = edit_df(df, rows)
 
-    features = name_col(rows)
+    df = df.drop(columns = ["date"], axis = 1)
 
-    X = v[features]
- 
+    # get_dummies convert categorical variable into dummy/indicator variables 
+
+    X = pd.get_dummies(df[list_dummies])
+
+    y = df.buy
+
     X_train, X_test, y_train, y_test = train_test_split(
-                                    X, y, test_size=0.2, random_state=10
+                                    X, y, test_size=0.3, 
+                                    random_state=10
                                     )
 
-    rfc = RandomForestClassifier(n_estimators=2000)
+    rfc = RandomForestClassifier(n_estimators=100,
+                                    max_depth = 90)
 
     rfc.fit(X_train, y_train)
 
@@ -205,7 +201,6 @@ def main():
 
     print(f"periods rsi: {periods}")
     print(f"Y candels: {in_}")
-    print(f"Amount that increased the volume: {a}")
     print(f"rows: {rows}")
     print(f"Candels used to calculate volume: {vol_p}")
 
@@ -219,85 +214,92 @@ def verify(file):
 
     # create the index of the df
 
-    index_ = name_col(rows)
-    index_.append("date")
-    index_.append("buy")
-    k = pd.DataFrame(columns=index_)
+    index_ = name_col(rows,1)
+
+    dataframe = pd.DataFrame(columns = index_)
 
     # Generate the  x-axis list to analize the slope with linear regression from cero to rows
 
     X = [x for x in range(0, rows)]
+    X_long = [x for x in range(0, vol_p)]
 
     for i in range(p + vol_p, len(file.index)):
 
+        Y_long = [file["close"][t] for t in range(i - vol_p - in_, i - in_)]
+        Y = [file["close"][t] for t in range(i - p, i - in_)]
+
+        slope_prev_short, intercept, r_value, p_value_2, std_err = linregress(X, Y)
+        slope_prev, intercept, r_value, p_value_2, std_err = linregress(X_long, Y_long)
+   
+        close = np.mean([(file["close"][i - t] - file["close"][i - in_]) / file["close"][i - in_] for t in range(in_ )])
+
         # Generate the y-axis list to analize the slope with linear regression from cero to rows candels close values
 
-        Y = [file["close"][t] for t in range(i - p, i - in_)]
 
         # Here creates a list with the RSI of the candels involved to find the minimun one 
         # and compare with the stablished before
 
-        rsi_list = [file["rsi"][t] for t in range(i - p, i - in_)]
-
         # The slope of the candels is calculated
 
-        slope, intercept, r_value, p_value_2, std_err = linregress(X, Y)
 
         # Mean volume calculate
 
         vol = [file["volume"][i - x] for x in range(in_, in_ + 1 + vol_p)]
-
         vol_prom = np.mean(vol)
 
-        buy_decide = 1
+        mean_15 = np.mean([file["close"][t] for t in range(i - 15-in_, i-in_)])
+        mean_30 = np.mean([file["close"][t] for t in range(i - 30 - in_, i- in_)])
+        mean_60 =  np.mean([file["close"][t] for t in range(i - 60 - in_, i- in_)])
+        mean_100 = np.mean([file["close"][t] for t in range(i - 100 - in_, i- in_)])
 
-        # If the values in the row pass the filter, they are considered to make the predictor model
-        # The slope, the volume and the rsi are compared
+        mean_rel_15_30 = mean_15 / mean_30
+        mean_rel_30_60 = mean_30 / mean_60
+        mean_rel_60_100 = mean_60 / mean_100
 
-        if (
-            slope < slope_
-            and (file["volume"][i - in_] or file["volume"][i - in_ - 1]) > vol_prom * a
-            and min(rsi_list) < rsi_compare
-        ):
-            # hi is the list with variaton of the candles we consider to know if the price rises or fall
+        # hi is the list with variaton of the candles we consider to know if the price rises or fall
 
-            high_candel = [(file["high"][i - t] - file["close"][i - in_]) / file["close"][i - in_] for t in range(in_ )]
+        high_candel = [(file["high"][i - t] - file["close"][i - in_]) / file["close"][i - in_] for t in range(in_ )]
 
-            # If the candles that come after to the first candles considered (rows) 
-            # are bigger than the B established value, buy decide will be B, otherwise it will be 0
+        # If the candles that come after to the first candles considered (rows) 
+        # are bigger than the B established value, buy decide will be B, otherwise it will be 0
 
-            if max(high_candel) > B:
+        if max(high_candel) > B:
 
-                buy_decide = f"{B}"
+            buy_decide = f"{B}"
 
-            else:
+        else:
 
-                buy_decide = "0"
+            buy_decide = "0"
 
         # either cero or B, if the row was considered, is will be added to the DataFrame to then execute the predictor
 
-        if buy_decide != 1:
+        row = list()
 
-            row = list()
-
-            for t in range(in_, p + 1):
-                row = row + [
-                    file["volume"][i - t] / float(file["volume"][i - p]),
-                    (file["open"][i - t] - file["close"][i - t]) / file["low"][i - t],
-                    (file["close"][i - t] - file["open"][i - t]) / file["high"][i - t],
-                    (file["high"][i - t]) / (file["low"][i - t]),
-                    file["rsi"][i - t],
-                    file["macd"][i - t],
-                    file["macd_h"][i - t],
-                    file["macd_s"][i - t],
+        for t in range(in_, p + 1):
+            row = row + [
+                file["volume"][i - t] / float(vol_prom),
+                (file["open"][i - t] - file["close"][i - t]) / file["low"][i - t],
+                (file["close"][i - t] - file["open"][i - t]) / file["high"][i - t],
+                (file["high"][i - t]) / (file["low"][i - t]),
+                file["rsi"][i - t],
+                file["macd"][i - t],
+                file["macd_h"][i - t],
+                file["macd_s"][i - t],
                 ]
-            row = row + [file["date"][i - in_], buy_decide]
+        row = row + [file["date"][i - in_],
+                close,
+                slope_prev,
+                slope_prev_short,
+                mean_rel_15_30,
+                mean_rel_30_60,
+                mean_rel_60_100,
+                buy_decide]
 
-            k.loc[len(k.index)] = row
+        dataframe.loc[len(dataframe.index)] = row
 
         # The Nan values must be dropped
-        k = k.dropna()
-    return k
+        dataframe = dataframe.dropna()
+    return dataframe
 
 main()
 ######################################################################################################
