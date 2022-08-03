@@ -1,7 +1,7 @@
 import numpy as np
 from datetime import datetime
 import pandas as pd
-
+from sklearn.metrics import classification_report
 
 ######################################################################################################
 # name generator
@@ -164,12 +164,16 @@ def name_col_2(in_):
 # hour and day converter through the date
 
 def weekday_convert(row):
-    date_time_obj = datetime. strptime(row, '%Y-%m-%d %H:%M:%S')
+    date_time_obj = datetime. strptime(row[0:20], '%Y-%m-%d %H:%M:%S')
     return date_time_obj.weekday()
 
+
 def hour_convert(row):
-    date_time_obj = datetime. strptime(row, '%Y-%m-%d %H:%M:%S')
+    date_time_obj = datetime. strptime(row[0:20], '%Y-%m-%d %H:%M:%S')
     return date_time_obj.hour
+    
+
+######################################################################################################
 
 ######################################################################################################
 
@@ -194,9 +198,11 @@ def cut_labels(df,columns_cut_dummi):
 
 ######################################################################################################
 
+######################################################################################################
 def edit_df(df, rows,prop = 1):
 
     # Take off the values outliers, or that ones that aren't frequent
+    # this option is used for amplitudes.py
     if prop == 1:
 
         df = df[ df["close"] < 0.1]
@@ -218,3 +224,30 @@ def edit_df(df, rows,prop = 1):
     df["hour"] = df["date"].apply(hour_convert)
 
     return df,list_dummies
+
+######################################################################################################
+
+######################################################################################################
+def print_results(names,p,periods,in_,B,rows,vol_p,st,predictions, y_test):
+
+    # RESULTS
+    # name of the .sav file
+
+    print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
+
+    # name is the list of the historical Crypto-currency data used
+
+    print(names)
+
+    # The classification report allows us to compare the precission, aquracy of different variables 
+    # used like B, in_, a also the different historical Crypto-currency data.
+
+    print(classification_report(y_test, predictions))
+
+    # The next information is useful to know which variables were used to obtain 
+    # what the classification report indicates
+
+    print(f"periods rsi: {periods}")
+    print(f"Y candels: {in_}")
+    print(f"rows: {rows}")
+    print(f"Candels used to calculate volume: {vol_p}")
