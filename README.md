@@ -1,7 +1,7 @@
 
 # amplitudes.py
-Fit a crypto trade predictor model with a determined sequence of candels from different Cryptocurrency.
-## Description
+Fit a crypto trade predictor model with a determined sequence of candels from different Cryptocurrency. [(read jupyter_analisis also, for a better interpretation)](https://github.com/elbernaderen/jupyter_analysis#btcusdt_adausdt_xmrusdt_ethusdt_bnbusdt_30m_hour_dayipynb)
+
 With this script, we run through each Crypto-currency Historical Data like BTCUSDT or ETHUSDT and generate numerous rows with a determinated number of candels. For each candel add technical indicators like:
 * macd 
 * macd histogram 
@@ -138,7 +138,7 @@ with [sklearn](https://scikit-learn.org/stable/install.html) we can use the mode
 Once we have downloaded the Crypto-currency Historical Data in the same directory, we call the program:
 
 ```bash
-py backtest_strategy.py
+py backtest_amplitudes.py
 ```
 Then, the program will ask the next variables:
 ```bash
@@ -152,18 +152,16 @@ Enter the number of candels (X) considered for the technical analysis:
 Enter the amount of periods for rsi calculation (14 recomended):
 ```
 A period for rsi calculation can be better for a candle interval analysis, and not for other one, so, it can be modificated if want it
-```bash
-Enter how much to increase the mean volume value:
-```
-This is a filter to consider just the candles with a bigger volume than the mean volume of a determined amount of candles
-```bash
-Enter the slope to take in reference, (0 recomended):
-```
-The slope of the close value of the candels indicates if the market (in this sequence) is bullish or bearish.
+
 ```bash
 Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 5m 
 ```
 The interval of the Crypto-currency Historical Data to consider.
+```bash
+Enter how many candels consider to calculate the volume mean:
+```
+To calculate the mean volume,so it can know if the volume has a increment or in other words if there are big participants, ex: 300.
+Once the program have finished, a classification report will be printed in console, with the accuracy, precission, etc of the model, and a .sav file will be created with the model ready for be used.
 
 Once the program has finished, a .xlsx spreadsheet will be created with a column with the found signals and the consecutive variations of the high and low candels value respect the close value of the X's last candel, so we can verify if prices had rises or fell and modificate the strategy to improve the prediction.
 
