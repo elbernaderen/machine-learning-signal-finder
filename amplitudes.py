@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from tools.tools import name_col, RSI, macd, edit_df
+from tools.tools import name_col, RSI, macd, edit_df,print_results
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
@@ -60,7 +60,10 @@ interval = input("Enter the interval to consider, ex: 1d or 1h or 30m or 15m or 
 
 # vol_p is the number that will be used to calculate the volume mean
 
-vol_p = int(input("Enter how many candels consider to calculate the volume mean: \n"))
+vol_p = int(
+    input("Enter how many candels consider to calculate the volume mean: \n"
+    )
+)
 
 # List that'll be filled with the different Crypto-currency used
 
@@ -78,10 +81,12 @@ names = ["LISTA:"]
 # This for will read each historical Crypto-currency data added as an argument
 def main():
 
-    # counter is used in the main program to count the number of historical Crypto-currency data
-    # added as argument
+    
 
     count = 0
+
+    # counter is used in the main program to count the number of historical Crypto-currency data
+    # added as argument
 
     for nam in range(1, len(sys.argv)):
 
@@ -89,27 +94,10 @@ def main():
 
         file = pd.read_csv(f"base/{str(sys.argv[nam])}_{interval}_base.csv")
 
-        # rsi is a list with each candel RSI value
-
-        rsi = RSI(file["close"], periods)
-
-        # Here the RSI list is added to the dataframe file
-
-        file["rsi"] = rsi
-
-        # The macd function receives a DataFrame and add to it the
-        # macd, macd_h and macd_s columns
-
-        file = macd(file)
-
-        # Here we delete the first 95 columns because the firts RSI values are 
-        # erroneous
-
-        file.drop(index = file.index[:95], axis=0, inplace=True)
-
-        # Reset the index after the first 95 rows are been deleted
-
-        file = file.reset_index()
+        # First need to add macd and rsi to the DataFrame
+        
+        file = add_rsi_macd(file)
+        
     
         # if it is the first historical Crypto-currency data, then:
 
@@ -179,34 +167,15 @@ def main():
 
     pickle.dump(rfc, open(filename_, "wb"))
 
-######################################################################################################
+    # This function prints the results
 
-######################################################################################################
-    # RESULTS
-    # name of the .sav file
-
-    print(f"model_p_{p}_perio_{periods}_in_{in_}_{B}_{st[0:16]}.sav")
-
-    # name is the list of the historical Crypto-currency data used
-
-    print(names)
-
-    # The classification report allows us to compare the precission, aquracy of different variables 
-    # used like B, in_, a also the different historical Crypto-currency data.
-
-    print(classification_report(y_test, predictions))
-
-    # The next information is useful to know which variables were used to obtain 
-    # what the classification report indicates
-
-    print(f"periods rsi: {periods}")
-    print(f"Y candels: {in_}")
-    print(f"rows: {rows}")
-    print(f"Candels used to calculate volume: {vol_p}")
+    print_results(names,p,periods,in_,B,rows,vol_p,st,predictions, y_test)
 
 ######################################################################################################
 
 ######################################################################################################
+
+
 # FUNCTIONS
 
 def verify(file):
@@ -300,6 +269,32 @@ def verify(file):
         # The Nan values must be dropped
         dataframe = dataframe.dropna()
     return dataframe
+
+def add_rsi_macd(file_):
+    # rsi is a list with each candel RSI value
+    file = file_
+
+    rsi = RSI(file["close"], periods)
+
+    # Here the RSI list is added to the dataframe file
+
+    file["rsi"] = rsi
+
+    # The macd function receives a DataFrame and add to it the
+    # macd, macd_h and macd_s columns
+
+    file = macd(file)
+
+    # Here we delete the first 95 columns because the firts RSI values are 
+    # erroneous
+
+    file.drop(index = file.index[:95], axis=0, inplace=True)
+
+    # Reset the index after the first 95 rows are been deleted
+
+    file = file.reset_index()
+
+    return file
 
 main()
 ######################################################################################################
