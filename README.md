@@ -131,6 +131,7 @@ Using the .sav model/s files, the program predict if the price will increase it'
 Taking in count the slope of the candels (rising or falling market, this is adjusted to falling market but it can be easily changed), the rsi value and the volume of the last candels, if the variables set fits with the sequence, the column "vale" will be 1 and otherwise will be 0, so it can be used as a filter.the value of the increment predicted. In all the other cases the value will be 0. Further, a determined number of candles that come next to the sequence analyzed will be added, with the highest and lowest values, so we can know if the strategy is acerted, and with this information we can improve it.
 ## Must install
 [pandas](https://pandas.pydata.org/), [numpy](https://numpy.org/install/) and [scipy](https://scipy.org/install/) libraries are used to work with data frames and lists.
+[Binance](https://pypi.org/project/python-binance/) is needed to download the crypto-currency historical data.
 with [sklearn](https://scikit-learn.org/stable/install.html) we can use the model with the predictor.
 
 [pickle](https://docs.python.org/3/library/pickle.html#:~:text=%E2%80%9CPickling%E2%80%9D%20is%20the%20process%20whereby,back%20into%20an%20object%20hierarchy.) is needed to open the .sav file with the predictor model.
@@ -179,6 +180,7 @@ With [sklearn](https://scikit-learn.org/stable/install.html) we can use the mode
 Will use [bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#binapy) to download the actualized data to make the prediction. 
 
 Also need [yaml](https://pypi.org/project/PyYAML/) to save and read the api data in a yml file.
+[Binance](https://pypi.org/project/python-binance/) is needed to download the crypto-currency historical data.
 ## Usage:
 As this bot use Telegram to send messagess, we'll need the user id of the receiver and the API key from the count of telegram that we'll use, and this data will be set in the yml file **telconfig** that is in the ignore folder. 
 
