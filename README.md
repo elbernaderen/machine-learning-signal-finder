@@ -32,7 +32,7 @@ Before we create the rows, first we filter them taking in count the slope of the
 
 
 ## Usage
-Once we have downloaded the Cryptocurrency Historical Data  using [call_bina.py] ETHUSDT base 2019 1 1(one or more) with the same interval in the same directory of the program, we call the program with the Crypto-currency  as command line arguments in capital letters as:
+Once we have downloaded the Cryptocurrency Historical Data  using [call_bina.py](https://github.com/elbernaderen/machine-learning-signal-finder#call_binapy) ETHUSDT base 2019 1 1(one or more) with the same interval in the same directory of the program, we call the program with the Crypto-currency  as command line arguments in capital letters as:
 
 ```bash
 py amplitudes_rsi_vol_rsi.py BTCUSDT ETHUSDT ADAUSDT
