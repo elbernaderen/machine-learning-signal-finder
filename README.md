@@ -300,11 +300,11 @@ This script calls the function **store_ohlcv** from [bina.py](https://github.com
 To download a Crypto-currency Historical Data for [amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#amplitudespy) and a Crypto-currency, for example ETHUSDT since a determinated date, must be called the program in console as continue:
 
 ```bash
-py call_bina.py ETHUSDT base 2019 1 1
+py call_bina.py ETHUSDT base 2019 1 1h
 ```
 To download a Crypto-currency Historical Data for [backtest_amplitudes.py](https://github.com/elbernaderen/machine-learning-signal-finder#backtest_amplitudespy) and a Crypto-currency, for example  BTCUSDT since a determinated date, must be called the program in console as continue:
 ```bash
-py call_bina.py BTCUSDT backtest 2022 3 5
+py call_bina.py BTCUSDT backtest 2022 3 5h
 ```
 # References:
 * [Scraping Crypto-currency Historical Data from Binance using python](https://resilient-quant-trader.medium.com/scraping-crypto-currency-historical-data-from-binance-using-python-9c0e77c04df7)
